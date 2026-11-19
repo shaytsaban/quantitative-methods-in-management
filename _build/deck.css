@@ -475,3 +475,9 @@ svg.diag .mi{font-family:'Times New Roman',Times,serif;font-style:italic}
 .flow4 p{font-size:20px;line-height:1.4}.flow4 b{font-size:24px}.flow4 .eq{font-size:23px}
 .stbl .so .m{font-size:1em}
 .more-h.tq{font-size:23px;margin-bottom:10px}
+.kick .goal{color:var(--navy2);font-weight:500;background:#fff;border-radius:99px;padding:1px 14px;font-size:16.5px;box-shadow:0 1px 0 var(--line);letter-spacing:0}
+.kick .goal b{color:#087469;font-weight:800}
+.route.r7 .rcard{min-height:128px}.rcard.core{border-top:6px solid #0f9d90}.rcard:not(.core){border-top:6px solid #d9d2c3}
+.pd-note{background:rgba(127,227,214,.12);border-right:5px solid #7fe3d6;border-radius:12px;padding:8px 16px;margin:-6px 0 16px}
+.pd-box ul{font-size:22px}
+.kick .goal{font-size:18px}

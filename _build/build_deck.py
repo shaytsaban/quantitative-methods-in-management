@@ -20,7 +20,8 @@ def render(s, total):
         return (f'<section class="slide dark pd" id="{s["id"]}" data-title="{s["title"]}" style="--pc:#7fe3d6"><div class="pd-num">{n}</div><div class="pd-in">'
                 f'<div class="kick" style="color:#ffb199"><span>חלק <span class="n">{n}</span> מתוך <span class="n">{total}</span> · {TX("כ-" + str(s["mins"]) + " דקות")}</span></div><div class="pd-h">{s["h"]}</div><div class="pd-q">{TX(s["q"])}</div>{note}'
                 f'<div class="pd-cols"><div class="pd-box"><b>מה נעשה בחלק הזה</b><ul>{"".join("<li>" + TX(x) + "</li>" for x in s["learn"])}</ul></div></div></div></section>')
-    kick = f'<div class="kick"><span>{TX(s["kick"])}</span></div>' if s.get('kick') else ''
+    goal = f'<span class="goal"><b>המטרה:</b> {TX(s["goal"])}</span>' if s.get('goal') else ''
+    kick = f'<div class="kick"><span>{TX(s["kick"])}</span>{goal}</div>' if s.get('kick') else ''
     return f'<section class="slide {s["cls"]}" id="{s["id"]}" data-title="{re.sub("<[^>]+>", "", s["title"])}">{kick}<h2>{TX(s["h"])}</h2>{s["body"]}</section>'
 
 

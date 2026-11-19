@@ -22,3 +22,5 @@ for _j, _k in enumerate(HOME):
     _x['h'] = 'לבית: ' + re.sub(r'^(תרגול|פעילות): ', '', _x['h'])
     if not _x['title'].startswith('לבית'): _x['title'] = 'לבית: ' + re.sub(r'^(תרגול|פעילות): ', '', _x['title'])
     SL.insert(_at + _j, _x)
+
+exec(R('content_goals.py'))

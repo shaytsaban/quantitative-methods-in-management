@@ -52,7 +52,7 @@ table.tbl2{width:100%;margin:1mm 0 2mm;font-size:11pt}.tbl2 th{background:var(--
 .gl{border-right:1mm solid var(--coral);padding:.6mm 2.2mm;margin:0 0 1.6mm;break-inside:avoid;font-size:10.8pt;line-height:1.25}
 .gl .th{font-weight:700;color:var(--navy);font-size:11.6pt}.gl small{color:var(--mut);direction:ltr;unicode-bidi:isolate;margin-right:1.5mm;font-size:9.8pt}.gl p{margin:0 0 .3mm}
 .glc{columns:2;column-gap:5mm}
-.home h3:before{content:""}
+.goal{color:#087469;font-size:10.8pt;margin:-.4mm 0 1mm}
 '''
 parts = {}
 for s in SL:
@@ -63,10 +63,10 @@ front = ''.join(f'<h3>{TX(s["h"])}</h3>{s["body"]}' for s in parts[None])
 body = f'<section class="part"><h1>לפני שמתחילים</h1>{front}</section>'
 for nn in range(1, TOTAL + 1):
     op = next(s for s in parts[nn] if s['kind'] == 'opener')
-    inner = f'<p class="pq">{TX(op["q"])}</p><ul class="pl">' + ''.join(f'<li>{TX(x)}</li>' for x in op['learn']) + '</ul>'
+    inner = f'<p class="pq">{TX(op["q"])}</p><p>{TX(op.get("note") or "")}</p><ul class="pl">' + ''.join(f'<li>{TX(x)}</li>' for x in op['learn']) + '</ul>'
     for s in parts[nn]:
         if s['kind'] == 'opener': continue
-        inner += f'<h3>{TX(s["h"])}</h3>' + s['body']
+        inner += f'<h3>{TX(s["h"])}</h3>' + (f'<p class="goal">המטרה: {TX(s["goal"])}.</p>' if s.get('goal') else '') + s['body']
     body += f'<section class="part"><h1><span class="sn">{nn}</span>{op["h"]}</h1>{inner}</section>'
 used = set(re.findall(r'data-t="(\w+)"', ''.join(s['body'] for s in SL)))
 gl = ''.join(f'<div class="gl"><div class="th">{g["h"]}<small>{g["en"]}</small></div><p><b>בפשטות:</b> {TX(g["p"])}</p><p><b>בלשון מקצועית:</b> {TX(g["f"])}</p><p><b>דוגמה:</b> {TX(g["ex"])}</p><p><b>שימו לב:</b> {TX(g["tr"])}</p></div>' for k, g in G.items())
