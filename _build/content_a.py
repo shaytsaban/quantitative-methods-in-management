@@ -12,6 +12,7 @@ SL = []            # every slide, in order
 CUR = [None]       # current part number
 NACT = [0]         # activities
 NCHK = [0]         # math lines verified
+MAN = []           # manifest for the tests: what every activity must accept and reject, written independently of the page
 
 
 def S(sid, title, h, body, kick=None, cls='', kind='slide'):
@@ -85,6 +86,7 @@ def mc(qid, q, opts, why):
     for i, t in enumerate(opts):
         mark = ' correct' if MODE == 'pdf' and i == a else ''
         o += f'<button class="o{mark}" data-i="{i}">{"אבגדה"[i]}. {TX(t)}</button>'
+    MAN.append(dict(kind='mc', id=qid, right=re.sub('<[^>]+>', '', TX(opts[a])), n=len(opts)))
     return f'<div class="mc" data-a="{a}" id="{qid}"><div class="q">{TX(q)}</div>{o}<div class="w"><b>הסבר:</b> {TX(why)}</div></div>'
 
 
@@ -109,6 +111,7 @@ def SORTER(aid, title, h, task, options, rows):
         t = ''.join(f'<tr><td>{TX(a)}</td><td><b>{TX(options[b])}</b></td><td>{TX(c)}</td></tr>' for a, b, c in rows)
         S(aid, title, h, f'<p>{TX(task)}</p><table class="tbl2"><tr><th>השורה</th><th>תשובה</th><th>נימוק</th></tr>{t}</table>')
         return
+    MAN.append(dict(kind='sorter', id=aid + '-w', rows=[re.sub('<[^>]+>', '', TX(options[b])) for _, b, _ in rows]))
     NACT[0] += 1
     r = ''
     for a, b, c in rows:
@@ -189,6 +192,8 @@ def TRY(qid, q, a, hints=(), steps=(), form=None, terms=None, out=None, nb=None,
     rows, sol = _trysol(a, steps)
     vs = vars_ or ''.join(sorted(set(letters) | set(re.findall(r'[a-z]', strip(' '.join(re.findall(r'\$([^$]*)\$', q))))))) or 'x'
     lab = f'<span class="tn">{num}</span>' if num else ''
+    _qe = re.findall(r'\$([^$]*)\$', q)
+    MAN.append(dict(kind='try', id=qid, a=strip(a), form=(form or ('exp' if letters else 'num')), expr=(strip(_qe[-1]) if _qe else ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
         li = ' '.join(f'{TX(note)} {MI(m)}.' for m, note in rows)
         return f'<div class="tryp"><p><b>{num + ". " if num else ""}</b>{TX(q)}</p><p class="tsl"><b>פתרון:</b> {li}</p><p><b>תשובה:</b> {MI(a)}</p></div>'
@@ -212,6 +217,7 @@ def TRYBIG(sid, tag, title, stem, a, hints=(), steps=(), expr=None, form=None, t
     rows, sol = _trysol(a, steps)
     stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (EQ(expr) if expr else '')
     vs = vars_ or ''.join(sorted(set(letters) | set(re.findall(r'[a-z]', strip(expr or ''))))) or 'x'
+    MAN.append(dict(kind='try', id=sid + '-t', a=strip(a), form=(form or ('exp' if letters else 'num')), expr=strip(expr or ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps) + (1 if tip else 0), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
         li = ''.join(f'<li>{TX(note)} {MI(m)}</li>' for m, note in rows)
         S(sid, title, title, f'<div class="qstem">{stem_html}</div>{extra}<ol class="steps">{li}</ol><div class="band ans"><b>תשובה:</b> {MI(a)}</div>' + (BAND('tip', tip) if tip else ''))
@@ -234,6 +240,7 @@ def FILLT(qid, head, rows, w='', vars_='x', idle='מלאו את התאים ול�
     """A table of typed answers. rows: (label in math, [answers], hint)."""
     if MODE == 'pdf':
         return TABLE(head, [[f'${lab}$'] + [f'${a}$' for a in ans] for lab, ans, _ in rows])
+    MAN.append(dict(kind='cells', id=qid, ans=[strip(x) for _, an, _ in rows for x in an]))
     NACT[0] += 1
     hd = ''.join(f'<th>{TX(x)}</th>' for x in head)
     b = ''
@@ -254,6 +261,7 @@ def GRIDQ(qid, rowh, colh, cells, final, w='', hint='', vars_='x'):
     if MODE == 'pdf':
         t = '<tr><th>×</th>' + ''.join(f'<th>{MI(c)}</th>' for c in colh) + '</tr>' + ''.join(f'<tr><th>{MI(rh)}</th>' + ''.join(f'<td>{MI(x)}</td>' for x in cells[r]) + '</tr>' for r, rh in enumerate(rowh))
         return f'<table class="tbl2 gqp">{t}</table><p><b>אחרי כינוס:</b> {MI(final)}</p>'
+    MAN.append(dict(kind='cells', id=qid, ans=[strip(x) for row in cells for x in row] + [strip(final)]))
     NACT[0] += 1
     inp = lambda a, extra='': f'<input class="ex" dir="ltr" autocomplete="off" spellcheck="false" data-a="{strip(a)}" data-h="{_html.escape(TX(hint), quote=True)}" {extra} aria-label="תשובה">'
     t = '<tr><th class="cn">×</th>' + ''.join(f'<th>{PM(c)}</th>' for c in colh) + '</tr>'
@@ -289,6 +297,7 @@ def OPS(sid, title, h, intro, states, final, w):
         li = ''.join(f'<li>{MI(p)}: {s["res"]}</li>' for p, s in zip(chainp, out))
         S(sid, title, h, f'<p>{TX(intro)}</p><ol class="steps">{li}</ol><div class="band ans"><b>תשובה:</b> {MI(str(final))}</div>'); return
     NACT[0] += 1
+    MAN.append(dict(kind='ops', id=sid + '-w', kinds=[k for _, k, _ in states], final=str(final)))
     cfg = _html.escape(json.dumps(dict(states=out, final=fin, w=TX(w)), ensure_ascii=False), quote=True)
     body = (f'<div class="act ops" id="{sid}-w" data-cfg="{cfg}"><div class="tasktxt"><b>המשימה:</b> {TX(intro)}</div><div class="opx"></div>'
             f'<div class="opg"><div><div class="fbbar">לחצו על סימן הפעולה שמבצעים ראשונה.</div><div class="actbar"><button class="abtn ghost shw">הראו לי את השלב הבא</button>{RST}</div></div><ol class="oplog"></ol></div></div>')

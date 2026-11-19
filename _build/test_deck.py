@@ -6,7 +6,7 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(H, '..', 'lectures', 'l
 CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 TEST = r'''
 window.onerror=(m,u,l,c,e)=>{document.documentElement.setAttribute('data-err',m+' @'+l+':'+c);};
-(function(){
+(async function(){
 const D=window.__deck,R={errors:[],overflow:[],small:[],mc:[],act:[],chars:[],bidi:[],wide:[],reveal:[]};
 const st=document.createElement('style');st.textContent='*{transition:none!important;animation:none!important}';document.head.appendChild(st);
 const stage=document.getElementById('stage');
@@ -27,31 +27,43 @@ function bidi(s){s.querySelectorAll('.eq,.m,.n,.opx,.tw-e').forEach(e=>{if(e.clo
  const w=document.createTreeWalker(s,NodeFilter.SHOW_TEXT);let t;while(t=w.nextNode()){const p=t.parentElement;if(!p||p.closest('svg,script,style,.eq,.m,.n,.opx,.op,.gq,.kp,[dir=ltr],input,.hints'))continue;if(/[−=+^<>≠]/.test(t.nodeValue)||/\d\s*-\s*\d/.test(t.nodeValue))R.bidi.push({id:s.id,why:'loose sign in Hebrew text',t:t.nodeValue.trim().slice(0,40)});}}
 function small(s){const w=document.createTreeWalker(s,NodeFilter.SHOW_TEXT);let n;const seen={};while(n=w.nextNode()){if(!n.nodeValue.trim())continue;const p=n.parentElement;if(p.closest('.ft,sup,sub,tspan,svg,.hints,[hidden],.kp,.rn,.fn,.tn,.wn>b'))continue;const f=parseFloat(getComputedStyle(p).fontSize);if(f<16.4)seen[Math.round(f*10)/10]=(n.nodeValue.trim().slice(0,18));}if(Object.keys(seen).length)R.small.push({id:s.id,seen});}
 const A=(id,kind,ok,more)=>R.act.push(Object.assign({id,kind,ok:!!ok},more||{}));
-function solve(s){
- s.querySelectorAll('.try').forEach(b=>{const i=b.querySelector('input.ex'),fb=b.querySelector('.fbbar'),chk=b.querySelector('.chk');
-  i.value='7x+123';i.dispatchEvent(new Event('input',{bubbles:true}));chk.click();const rej=fb.classList.contains('wrong');
-  let trapsOk=true;try{JSON.parse(i.dataset.traps||'[]').forEach(([x,m])=>{i.value=x;chk.click();if(!fb.classList.contains('wrong')||!fb.innerHTML.includes(m.slice(0,12)))trapsOk=false;});}catch(e){trapsOk=false;}
-  i.value=i.dataset.a;i.dispatchEvent(new Event('input',{bubbles:true}));const read=fb.textContent.includes('קראנו');chk.click();const acc=fb.classList.contains('good')&&b.classList.contains('solved');
-  const hb=b.querySelector('.hintb'),nh=b.querySelectorAll('.hints>div').length;let hint=true;if(nh){hb.click();hint=fb.classList.contains('half');}
-  const ns=b.querySelectorAll('.tsol .tstep').length;let stg=true;
-  if(b.classList.contains('big')){const sb=b.querySelector('.solb');for(let k=0;k<ns;k++)sb.click();stg=b.querySelectorAll('.tsol .tstep.show').length===ns&&sb.disabled;}
-  else{b.querySelector('.solb').click();const pop=document.getElementById('moreov');const nx=pop.querySelector('.nxs');for(let k=1;k<ns;k++)nx.click();stg=pop.classList.contains('open')&&pop.querySelectorAll('.tstep.show').length===ns;pop.classList.remove('open');}
-  i.value=i.dataset.a;chk.click();
-  A(b.id,'try',rej&&acc&&trapsOk&&hint&&stg&&read&&ns>0,{rej,acc,trapsOk,hint,stg,read,ns});});
- s.querySelectorAll('.cells').forEach(b=>{const ins=[...b.querySelectorAll('input.ex')],fb=b.querySelector('.fbbar');ins.forEach(i=>i.value='999');b.querySelector('.chk').click();const rej=fb.classList.contains('wrong')&&ins.every(i=>i.classList.contains('badc'));
-  b.querySelector('.rst').click();const clr=ins.every(i=>!i.value);b.querySelector('.shw').click();const acc=b.classList.contains('solved')&&ins.every(i=>i.classList.contains('good'));A(b.id,'cells',rej&&clr&&acc,{rej,clr,acc,n:ins.length});});
- s.querySelectorAll('.ops').forEach(b=>{const C=JSON.parse(b.dataset.cfg),fb=b.querySelector('.fbbar');let ok=true,wrongSeen=false;
-  for(let k=0;k<C.states.length;k++){const ops=[...b.querySelectorAll('.opx .op')];const w=ops.find(o=>+o.dataset.i!==C.states[k].ok);if(w){w.click();if(!fb.classList.contains('wrong')||b.__k()!==k)ok=false;wrongSeen=true;}
-   const r=ops.find(o=>+o.dataset.i===C.states[k].ok);if(!r){ok=false;break;}r.click();if(b.__k()!==k+1)ok=false;}
-  ok=ok&&b.classList.contains('solved')&&b.querySelectorAll('.oplog li').length===C.states.length;A(b.id,'ops',ok,{wrongSeen,final:b.querySelector('.opx').textContent});});
- s.querySelectorAll('.sorter').forEach(b=>{let ok=true;b.querySelectorAll('.srow').forEach(r=>{const os=r.querySelectorAll('.so'),a=+r.dataset.a;const w=(a+1)%os.length;os[w].click();if(r.classList.contains('solved'))ok=false;os[a].click();if(!r.classList.contains('solved'))ok=false;});A(b.id,'sorter',ok&&b.classList.contains('solved'));});
- s.querySelectorAll('.mc').forEach(m=>{const a=+m.dataset.a,os=[...m.querySelectorAll('.o')],w=(a+1)%os.length;os[w].click();const ok=os[w].classList.contains('bad')&&os[a].classList.contains('ok')&&getComputedStyle(m.querySelector('.w')).display!=='none';R.mc.push({id:m.id,ok,a,n:os.length});});}
-D.slides.forEach((s,i)=>{D.show(i);measure(s,i,'first');D.setAll(s,true);measure(s,i,'open');wide(s);bidi(s);small(s);
+const MAN=__MAN__;const byId={};MAN.forEach(m=>byId[m.id]=m);const plain=e=>e.textContent.replace(/\s+/g,' ').trim();
+function stateOf(b,fb){if(fb.classList.contains('good'))return b.classList.contains('solved')?'ok':'good-but-not-solved';if(fb.classList.contains('half'))return 'half';if(fb.classList.contains('wrong'))return fb.textContent.includes('לא הצלחנו לקרוא')?'bad':'no';return 'empty';}
+async function runTry(b){const m=byId[b.id];if(!m){A(b.id,'try',false,{why:'no manifest entry'});return;}const i=b.querySelector('input.ex'),fb=b.querySelector('.fbbar'),chk=b.querySelector('.chk');const bad=[];
+ if(b.dataset.a!==m.a)bad.push({why:'data-a differs',dom:b.dataset.a,man:m.a});
+ m.cases.forEach(([v,exp,what],k)=>{i.value=v;i.dispatchEvent(new Event('input',{bubbles:true}));if(k%2)i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));else chk.click();let got=stateOf(b,fb);
+  if(exp.startsWith('trap:')){if(got!=='no'||!plain(fb).includes(exp.slice(5).replace(/\s+/g,' ').trim()))bad.push({v,exp,got,fb:plain(fb).slice(0,60)});}
+  else if(got!==exp)bad.push({v,exp,got,what});});
+ const hb=b.querySelector('.hintb'),nh=b.querySelectorAll('.hints>div').length;if(nh!==m.nhints)bad.push({why:'hints',nh});if(nh){hb.click();if(!fb.classList.contains('half')||!plain(fb).includes('רמז 1'))bad.push({why:'hint not shown'});}
+ const ns=b.querySelectorAll('.tsol .tstep').length;if(ns!==m.nsteps||!ns)bad.push({why:'steps',ns,man:m.nsteps});
+ if(b.classList.contains('big')){const sb=b.querySelector('.solb');sb.click();if(b.querySelectorAll('.tsol .tstep.show').length!==1)bad.push({why:'first stage'});for(let k=1;k<ns;k++)sb.click();if(b.querySelectorAll('.tsol .tstep.show').length!==ns||!sb.disabled)bad.push({why:'stages'});}
+ else{b.querySelector('.solb').click();const pop=document.getElementById('moreov');const nx=pop.querySelector('.nxs');if(!pop.classList.contains('open')||pop.querySelectorAll('.tstep.show').length!==1)bad.push({why:'popup first stage'});for(let k=1;k<ns;k++)nx.click();if(pop.querySelectorAll('.tstep.show').length!==ns)bad.push({why:'popup stages'});const r=pop.querySelector('.more-box').getBoundingClientRect();if(r.bottom>innerHeight||r.top<0)bad.push({why:'popup outside the screen'});pop.classList.remove('open');}
+ // keypad: appears on focus and writes into the box
+ i.value='';i.focus();const kp=document.querySelector('.kp');const kb=kp&&kp.querySelector('button');if(!kp||getComputedStyle(kp).display==='none'||!kb)bad.push({why:'keypad missing'});else{kb.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));if(i.value!==kb.dataset.k)bad.push({why:'keypad did not type',v:i.value});}
+ i.focus();i.value='7x+123';chk.click();await new Promise(r=>setTimeout(r,0));{const kr=document.querySelector('.kp').getBoundingClientRect(),fr=fb.getBoundingClientRect(),ir=i.getBoundingClientRect();const hit=(p,q)=>!(p.right<=q.left||q.right<=p.left||p.bottom<=q.top||q.bottom<=p.top);if(hit(kr,fr)||hit(kr,ir))bad.push({why:'keypad covers the feedback or the answer box'});if(kr.bottom>innerHeight||kr.top<0)bad.push({why:'keypad outside the screen'});}
+ i.value=m.a;i.dispatchEvent(new Event('input',{bubbles:true}));chk.click();if(stateOf(b,fb)!=='ok')bad.push({why:'final answer'});
+ A(b.id,'try',!bad.length,{cases:m.cases.length,bad});}
+async function solve(s){
+ for(const b of s.querySelectorAll('.try'))await runTry(b);
+ s.querySelectorAll('.cells').forEach(b=>{const m=byId[b.id];const ins=[...b.querySelectorAll('input.ex')],fb=b.querySelector('.fbbar');const bad=[];if(!m||m.ans.length!==ins.length){A(b.id,'cells',false,{why:'manifest'});return;}
+  ins.forEach((i,k)=>{if(i.dataset.a!==m.ans[k])bad.push({why:'data-a',k});i.value='('+m.ans[k]+')+1';});b.querySelector('.chk').click();if(!fb.classList.contains('wrong')||!ins.every(i=>i.classList.contains('badc')||i.classList.contains('halfc')))bad.push({why:'wrong values accepted'});
+  b.querySelector('.rst').click();if(!ins.every(i=>!i.value))bad.push({why:'reset'});
+  ins.forEach((i,k)=>{i.value=k?m.ans[k]:'';});b.querySelector('.chk').click();if(b.classList.contains('solved'))bad.push({why:'solved with an empty cell'});
+  ins.forEach((i,k)=>{i.value=m.ans[k];});b.querySelector('.chk').click();if(!b.classList.contains('solved')||!ins.every(i=>i.classList.contains('good')))bad.push({why:'right values rejected',fb:plain(fb).slice(0,50)});
+  b.querySelector('.rst').click();b.querySelector('.shw').click();if(!b.classList.contains('solved'))bad.push({why:'show answers'});A(b.id,'cells',!bad.length,{n:ins.length,bad});});
+ s.querySelectorAll('.ops').forEach(b=>{const m=byId[b.id];const C=JSON.parse(b.dataset.cfg),fb=b.querySelector('.fbbar');let ok=!!m&&m.kinds.join()===C.states.map(x=>x.kind).join(),wrongSeen=0;
+  for(let k=0;k<C.states.length;k++){const ops=[...b.querySelectorAll('.opx .op')];ops.filter(o=>+o.dataset.i!==C.states[k].ok).forEach(w=>{w.click();if(!fb.classList.contains('wrong')||b.__k()!==k)ok=false;wrongSeen++;});
+   const r=ops.find(o=>+o.dataset.i===C.states[k].ok);if(!r||r.dataset.k!==C.states[k].kind){ok=false;break;}r.click();if(b.__k()!==k+1)ok=false;}
+  const fin=plain(b.querySelector('.opx')).replace('−','-');ok=ok&&b.classList.contains('solved')&&b.querySelectorAll('.oplog li').length===C.states.length&&m&&fin===m.final;
+  b.querySelector('.rst').click();if(b.__k()!==0)ok=false;for(let k=0;k<C.states.length;k++)b.querySelector('.shw').click();if(!b.classList.contains('solved'))ok=false;A(b.id,'ops',ok,{wrongSeen,fin});});
+ s.querySelectorAll('.sorter').forEach(b=>{const m=byId[b.id];let ok=!!m;const rows=[...b.querySelectorAll('.srow')];if(m&&m.rows.length!==rows.length)ok=false;rows.forEach((r,k)=>{const os=[...r.querySelectorAll('.so')],a=+r.dataset.a;if(m&&plain(os[a])!==m.rows[k].replace(/\s+/g,' ').trim())ok=false;os.forEach((o,j)=>{if(j!==a){o.click();if(r.classList.contains('solved'))ok=false;}});os[a].click();if(!r.classList.contains('solved'))ok=false;});A(b.id,'sorter',ok&&b.classList.contains('solved'));});
+ s.querySelectorAll('.mc').forEach(q=>{const m=byId[q.id];const a=+q.dataset.a,os=[...q.querySelectorAll('.o')];let ok=!!m&&os.length===m.n&&plain(os[a]).slice(3)===m.right.replace(/\s+/g,' ').trim();const w=(a+1)%os.length;os[w].click();ok=ok&&os[w].classList.contains('bad')&&os[a].classList.contains('ok')&&getComputedStyle(q.querySelector('.w')).display!=='none';
+  q.classList.remove('done');os.forEach(o=>o.classList.remove('ok','bad'));os[a].click();ok=ok&&os[a].classList.contains('ok')&&!os.some(o=>o.classList.contains('bad'));R.mc.push({id:q.id,ok,a,n:os.length});});}
+for(let i=0;i<D.slides.length;i++){const s=D.slides[i];D.show(i);measure(s,i,'first');D.setAll(s,true);measure(s,i,'open');wide(s);bidi(s);small(s);
  const txt=s.textContent;[['em','—'],['maqaf','־'],['en','–'],['ell','…'],['arrow','→'],['q1','“'],['q2','”'],['hyphenminus-in-math',null]].forEach(([k,c])=>{if(c&&txt.includes(c))R.chars.push({id:s.id,k});});
  s.querySelectorAll('.eq,.m').forEach(e=>{if(/-/.test(e.textContent))R.chars.push({id:s.id,k:'ascii minus in math: '+e.textContent.slice(0,20)});});
- solve(s);measure(s,i,'solved');wide(s);
- // popups of compact tries must fit the viewport
- });
+ await solve(s);measure(s,i,'solved');wide(s);
+ }
 // reveals: walking with next() shows every group, one per click, and reaches the last slide
 D.show(0);let k=0,per={};while(D.cur()<D.slides.length-1&&k<3000){const c=D.cur();D.next();k++;per[c]=(per[c]||0)+1;}
 R.walk={clicks:k,end:D.cur(),slides:D.slides.length};
@@ -60,12 +72,47 @@ R.counts={slides:D.slides.length,tries:document.querySelectorAll('.try').length,
 document.documentElement.setAttribute('data-test',JSON.stringify(R));
 })();
 '''
+
+sys.path.insert(0, H)
+from qlib import same, ev, strip
+MANI = json.load(open(os.path.join(H, 'tests', 'manifest.json'), encoding='utf8'))
+def _terms(a):
+    out, d, cur = [], 0, ''
+    for i, c in enumerate(a):
+        if c == '(': d += 1
+        elif c == ')': d -= 1
+        if c in '+-' and d == 0 and i and a[i - 1] not in '^*/(':
+            out.append(cur); cur = c
+        else: cur += c
+    out.append(cur); return out
+def cases(m):
+    a, f = m['a'], m['form']
+    cs = [(a, 'ok', 'the answer'), (a.replace('-', '−').replace('*', '·'), 'ok', 'typographic minus and dot'), (' ' + a.replace('+', ' + ') + ' ', 'ok', 'with spaces'), (a.upper() if f != 'fac' or 'e' not in a else a, 'ok', 'capital letters')]
+    t = _terms(a)
+    if len(t) > 1 and f == 'exp':
+        r = ''.join(x if x[0] in '+-' else '+' + x for x in reversed(t)).lstrip('+')
+        assert same(r, a), (r, a); cs.append((r, 'ok', 'terms in another order'))
+    if re.search(r'\^[23](?!\d)', a) and '^(' not in a: cs.append((a.replace('^2', '²').replace('^3', '³'), 'ok', 'superscript digits'))
+    cs += [(f'({a})+1', 'no', 'answer plus 1'), ('7x+123', 'no', 'unrelated'), ('', 'empty', 'empty'), ('x^', 'bad', 'unreadable'), ('(2x+3', 'bad', 'open bracket')]
+    if abs(ev(a)) > 1e-9: cs.append((f'-({a})', 'no', 'opposite sign'))
+    if f == 'exp' and len(t) >= 1: cs.append((f'({a})', 'half', 'answer inside brackets'))
+    if f == 'exp' and re.search('[a-z]', a): cs.append((a + '+x-x', 'half', 'not collected'))
+    if f == 'num': cs.append((f'{a}+0', 'half', 'still an exercise'))
+    e = m['expr']
+    if e and e != a:
+        try: eq = same(e, a)
+        except Exception: eq = False
+        if eq: cs.append((e, 'half', 'the question itself typed back'))
+    for x, msg in m['traps']: cs.append((x, 'trap:' + re.sub('<[^>]+>', '', msg)[:14], 'trap'))
+    return cs
+for m in MANI:
+    if m['kind'] == 'try': m['cases'] = cases(m)
 src = open(SRC, encoding='utf8').read()
 i = src.rindex('})();\n</script>')
-out = src[:i] + 'window.__deck=window.__deck;\n' + '})();\n</script>\n<script>' + TEST + '</script>' + src[i + len('})();\n</script>'):]
+out = src[:i] + 'window.__deck=window.__deck;\n' + '})();\n</script>\n<script>' + TEST.replace('__MAN__', json.dumps(MANI, ensure_ascii=False).replace('</', '<\\/')) + '</script>' + src[i + len('})();\n</script>'):]
 d = tempfile.mkdtemp(dir=os.environ.get('TMPDIR'))
 p = os.path.join(d, 't.html'); open(p, 'w', encoding='utf8').write(out)
-r = subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={d}/p', '--window-size=1400,900', '--virtual-time-budget=20000', '--dump-dom', 'file://' + p], capture_output=True, text=True, timeout=300)
+r = subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={d}/p', '--window-size=1400,900', '--virtual-time-budget=60000', '--dump-dom', 'file://' + p], capture_output=True, text=True, timeout=300)
 dom = r.stdout
 m = re.search(r'data-test="([^"]*)"', dom)
 e = re.search(r'data-err="([^"]*)"', dom)
@@ -78,5 +125,5 @@ print('counts', R['counts']); print('walk', R['walk'])
 for k in ('overflow', 'wide', 'bidi', 'chars', 'reveal', 'small'):
     print(f'{k}: {len(R[k])}')
     for x in R[k][:40]: print('   ', json.dumps(x, ensure_ascii=False))
-print('activities', len(R['act']), 'failed', len(bad_act)); [print('   ', json.dumps(a, ensure_ascii=False)) for a in bad_act[:30]]
+print('activities', len(R['act']), 'of', len(MANI) - sum(m['kind'] == 'mc' for m in MANI), 'in the manifest; typed cases', sum(a.get('cases', 0) for a in R['act']), '; failed', len(bad_act)); [print('   ', json.dumps(a, ensure_ascii=False)[:900]) for a in bad_act[:40]]
 print('mc', len(R['mc']), 'failed', len(bad_mc))

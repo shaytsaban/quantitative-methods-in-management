@@ -1,0 +1,1180 @@
+[
+ {
+  "kind": "try",
+  "id": "t-how",
+  "a": "x^2+3",
+  "form": "exp",
+  "expr": "x",
+  "traps": [
+   [
+    "2x+3",
+    "כתבתם <span class=\"m\" dir=\"ltr\">2<i>x</i></span>, כלומר <span class=\"n\">2</span> כפול <span class=\"m\" dir=\"ltr\"><i>x</i></span>. בריבוע פירושו <span class=\"m\" dir=\"ltr\"><i>x</i></span> כפול <span class=\"m\" dir=\"ltr\"><i>x</i></span>, וכותבים x^<span class=\"n\">2</span>."
+   ]
+  ],
+  "nsteps": 1,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "cells",
+  "id": "f-pow",
+  "ans": [
+   "8",
+   "9",
+   "100",
+   "1",
+   "125"
+  ]
+ },
+ {
+  "kind": "cells",
+  "id": "f-sign",
+  "ans": [
+   "-20",
+   "9",
+   "-14",
+   "3",
+   "-8"
+  ]
+ },
+ {
+  "kind": "ops",
+  "id": "s-ops1-w",
+  "kinds": [
+   "par",
+   "pow",
+   "mul",
+   "add",
+   "add"
+  ],
+  "final": "7"
+ },
+ {
+  "kind": "ops",
+  "id": "s-ops2-w",
+  "kinds": [
+   "par",
+   "pow",
+   "mul",
+   "mul",
+   "add"
+  ],
+  "final": "7"
+ },
+ {
+  "kind": "mc",
+  "id": "s-m52-mc-q",
+  "right": "1",
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-o1",
+  "a": "2",
+  "form": "num",
+  "expr": "8-2*3",
+  "traps": [
+   [
+    "18",
+    "חישבתם משמאל לימין. הכפל קודם לחיסור."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-o2",
+  "a": "18",
+  "form": "num",
+  "expr": "(8-2)*3",
+  "traps": [
+   [
+    "2",
+    "התעלמתם מהסוגריים. מה שבתוכם מחושב ראשון."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-o3",
+  "a": "-6",
+  "form": "num",
+  "expr": "-4^2+10",
+  "traps": [
+   [
+    "26",
+    "חישבתם <span class=\"m\" dir=\"ltr\">(−4)<sup>2</sup></span>. כאן אין סוגריים, ולכן רק ה-<span class=\"n\">4</span> בריבוע."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-o4",
+  "a": "13",
+  "form": "num",
+  "expr": "2*(-3)^2-5",
+  "traps": [
+   [
+    "-23",
+    "<span class=\"m\" dir=\"ltr\">(−3)<sup>2</sup></span> הוא <span class=\"n\">9</span> חיובי: מינוס כפול מינוס."
+   ],
+   [
+    "31",
+    "קודם החזקה, ורק אחר כך הכפל ב-<span class=\"n\">2</span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "mc",
+  "id": "s-coef-mc-q",
+  "right": "−1",
+  "n": 4
+ },
+ {
+  "kind": "cells",
+  "id": "f-sub",
+  "ans": [
+   "4",
+   "4",
+   "-4",
+   "-4",
+   "8",
+   "-8",
+   "36",
+   "36",
+   "-20",
+   "-20",
+   "-16",
+   "16"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "s-sub-biz-t",
+  "a": "1600",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "16000",
+    "בדקו את הכפל: <span class=\"m\" dir=\"ltr\">40·25 = 1000</span>."
+   ],
+   [
+    "665",
+    "חיברתם לפני שכפלתם. הכפל <span class=\"m\" dir=\"ltr\">40·25</span> קודם לחיבור."
+   ],
+   [
+    "1000",
+    "שכחתם להוסיף את השכירות, <span class=\"n\">600</span> ש״ח."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "sorter",
+  "id": "s-like-sort-w",
+  "rows": [
+   "דומים",
+   "לא דומים",
+   "דומים",
+   "לא דומים",
+   "דומים",
+   "לא דומים"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "s-like-try1-t",
+  "a": "-3y^2+8y+6",
+  "form": "exp",
+  "expr": "3y+y^2+12+5y-6-4y^2",
+  "traps": [
+   [
+    "5y^2+8y+6",
+    "המקדם של <span class=\"m\" dir=\"ltr\">−4<i>y</i><sup>2</sup></span> שלילי: <span class=\"m\" dir=\"ltr\">1 − 4 = −3</span>."
+   ],
+   [
+    "-3y^2+8y+18",
+    "בדקו את המספרים החופשיים: <span class=\"m\" dir=\"ltr\">12 − 6</span>."
+   ],
+   [
+    "-4y^2+8y+6",
+    "שכחתם את <span class=\"m\" dir=\"ltr\"><i>y</i><sup>2</sup></span> הראשון. המקדם שלו הוא <span class=\"n\">1</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-l1",
+  "a": "5x",
+  "form": "exp",
+  "expr": "7x-3x+x",
+  "traps": [
+   [
+    "4x",
+    "ל-<span class=\"m\" dir=\"ltr\"><i>x</i></span> האחרון יש מקדם <span class=\"n\">1</span>, ולכן <span class=\"m\" dir=\"ltr\">7 − 3 + 1</span>."
+   ],
+   [
+    "5x^3",
+    "בכינוס החזקה אינה משתנה. מחברים רק מקדמים."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-l2",
+  "a": "3a+7b",
+  "form": "exp",
+  "expr": "4a+2b-a+5b",
+  "traps": [
+   [
+    "10ab",
+    "אי אפשר לחבר <span class=\"m\" dir=\"ltr\"><i>a</i></span> עם <span class=\"m\" dir=\"ltr\"><i>b</i></span>. אלה משפחות שונות."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-l3",
+  "a": "x^2+3x+4",
+  "form": "exp",
+  "expr": "2x^2+3x-x^2+4",
+  "traps": [
+   [
+    "4x^2+4",
+    "<span class=\"m\" dir=\"ltr\">3<i>x</i></span> אינו דומה ל-<span class=\"m\" dir=\"ltr\"><i>x</i><sup>2</sup></span>. הוא נשאר לבדו."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-l4",
+  "a": "8-8y",
+  "form": "exp",
+  "expr": "5-2y+3-6y",
+  "traps": [
+   [
+    "8+4y",
+    "שני האיברים עם <span class=\"m\" dir=\"ltr\"><i>y</i></span> שליליים: <span class=\"m\" dir=\"ltr\">−2 − 6 = −8</span>."
+   ],
+   [
+    "8-4y",
+    "שני האיברים עם <span class=\"m\" dir=\"ltr\"><i>y</i></span> שליליים: <span class=\"m\" dir=\"ltr\">−2 − 6 = −8</span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-p1",
+  "a": "x^7",
+  "form": "exp",
+  "expr": "x^3*x^4",
+  "traps": [
+   [
+    "x^12",
+    "בכפל חזקות מחברים את המעריכים, לא כופלים: <span class=\"m\" dir=\"ltr\">3 + 4</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-p2",
+  "a": "y^6",
+  "form": "exp",
+  "expr": "y*y^5",
+  "traps": [
+   [
+    "y^5",
+    "גם ל-<span class=\"m\" dir=\"ltr\"><i>y</i></span> הראשון יש מעריך: <span class=\"n\">1</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-p3",
+  "a": "a^7",
+  "form": "exp",
+  "expr": "a^2*a^2*a^3",
+  "traps": [
+   [
+    "a^12",
+    "מחברים את המעריכים: <span class=\"m\" dir=\"ltr\">2 + 2 + 3</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "sorter",
+  "id": "s-pw-sort-w",
+  "rows": [
+   "מחברים",
+   "כופלים",
+   "מחברים",
+   "כופלים",
+   "מחברים"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "t-q1",
+  "a": "108y^5",
+  "form": "exp",
+  "expr": "(3y)^3*4y^2",
+  "traps": [
+   [
+    "12y^5",
+    "גם ה-<span class=\"n\">3</span> שבסוגריים בחזקת <span class=\"n\">3</span>: <span class=\"m\" dir=\"ltr\">3<sup>3</sup> = 27</span>."
+   ],
+   [
+    "108y^6",
+    "בכפל חזקות מחברים את המעריכים: <span class=\"m\" dir=\"ltr\">3 + 2 = 5</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-q2",
+  "a": "2x^10+x^30",
+  "form": "exp",
+  "expr": "2x^3*x^7+(x^3)^10",
+  "traps": [
+   [
+    "2x^10+x^13",
+    "חזקה של חזקה: כופלים את המעריכים, <span class=\"m\" dir=\"ltr\">3·10 = 30</span>."
+   ],
+   [
+    "2x^21+x^30",
+    "בכפל חזקות מחברים את המעריכים: <span class=\"m\" dir=\"ltr\">3 + 7 = 10</span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-q3",
+  "a": "8x^10+x^30",
+  "form": "exp",
+  "expr": "(2x)^3*x^7+(-x^3)^10",
+  "traps": [
+   [
+    "2x^10+x^30",
+    "גם ה-<span class=\"n\">2</span> שבסוגריים בחזקת <span class=\"n\">3</span>: <span class=\"m\" dir=\"ltr\">2<sup>3</sup> = 8</span>."
+   ],
+   [
+    "8x^10-x^30",
+    "מינוס בחזקה זוגית נותן תוצאה חיובית."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-q4",
+  "a": "40x^9y^14",
+  "form": "exp",
+  "expr": "5x^3y^2(2x^2y^4)^3",
+  "traps": [
+   [
+    "10x^9y^14",
+    "<span class=\"m\" dir=\"ltr\">2<sup>3</sup> = 8</span>, ולא <span class=\"n\">2</span>."
+   ],
+   [
+    "40x^8y^9",
+    "בתוך הסוגריים זו חזקה של חזקה: <span class=\"m\" dir=\"ltr\">(<i>x</i><sup>2</sup>)<sup>3</sup> = <i>x</i><sup>6</sup></span> ו-<span class=\"m\" dir=\"ltr\">(<i>y</i><sup>4</sup>)<sup>3</sup> = <i>y</i><sup>12</sup></span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d1",
+  "a": "5x+15",
+  "form": "exp",
+  "expr": "5(x+3)",
+  "traps": [
+   [
+    "5x+3",
+    "ה-<span class=\"n\">5</span> כופל גם את ה-<span class=\"n\">3</span>: <span class=\"m\" dir=\"ltr\">5·3 = 15</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d2",
+  "a": "-6x+8",
+  "form": "exp",
+  "expr": "-2(3x-4)",
+  "traps": [
+   [
+    "-6x-8",
+    "<span class=\"m\" dir=\"ltr\">(−2)·(−4) = +8</span>: מינוס כפול מינוס."
+   ],
+   [
+    "-6x-4",
+    "ה-<span class=\"m\" dir=\"ltr\">−2</span> כופל גם את <span class=\"m\" dir=\"ltr\">−4</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d3",
+  "a": "x^2-7x",
+  "form": "exp",
+  "expr": "x(x-7)",
+  "traps": [
+   [
+    "2x-7x",
+    "<span class=\"m\" dir=\"ltr\"><i>x</i>·<i>x</i></span> הוא <span class=\"m\" dir=\"ltr\"><i>x</i><sup>2</sup></span>, ולא <span class=\"m\" dir=\"ltr\">2<i>x</i></span>."
+   ],
+   [
+    "-5x",
+    "<span class=\"m\" dir=\"ltr\"><i>x</i>·<i>x</i></span> הוא <span class=\"m\" dir=\"ltr\"><i>x</i><sup>2</sup></span>, ולא <span class=\"m\" dir=\"ltr\">2<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d4",
+  "a": "4+3y",
+  "form": "exp",
+  "expr": "8-(4-3y)",
+  "traps": [
+   [
+    "4-3y",
+    "גם <span class=\"m\" dir=\"ltr\">−3<i>y</i></span> מתהפך, והופך ל-<span class=\"m\" dir=\"ltr\">+3<i>y</i></span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "s-simp-try-t",
+  "a": "4.5x+9y+4",
+  "form": "exp",
+  "expr": "5x+6y-0.5x+8-(4-3y)",
+  "traps": [
+   [
+    "4.5x+3y+4",
+    "המינוס שלפני הסוגריים הופך גם את <span class=\"m\" dir=\"ltr\">−3<i>y</i></span> ל-<span class=\"m\" dir=\"ltr\">+3<i>y</i></span>."
+   ],
+   [
+    "4.5x+9y+12",
+    "המינוס חל גם על ה-<span class=\"n\">4</span>: <span class=\"m\" dir=\"ltr\">8 − 4</span>."
+   ],
+   [
+    "5.5x+9y+4",
+    "האיבר הוא <span class=\"m\" dir=\"ltr\">−0.5<i>x</i></span>: <span class=\"m\" dir=\"ltr\">5 − 0.5 = 4.5</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-s1",
+  "a": "-2a^2-16a+9",
+  "form": "exp",
+  "expr": "2a-(2a^2-6)-3(6a-1)",
+  "traps": [
+   [
+    "-2a^2-16a+3",
+    "<span class=\"m\" dir=\"ltr\">−(2<i>a</i><sup>2</sup> − 6)</span> נותן <span class=\"m\" dir=\"ltr\">+6</span>, ו-<span class=\"m\" dir=\"ltr\">−3·(−1)</span> נותן <span class=\"m\" dir=\"ltr\">+3</span>."
+   ],
+   [
+    "-2a^2-16a-9",
+    "שני המספרים החופשיים חיוביים אחרי פתיחת הסוגריים: <span class=\"m\" dir=\"ltr\">+6</span> ו-<span class=\"m\" dir=\"ltr\">+3</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-s2",
+  "a": "-2x^5+4x^4+4x^3",
+  "form": "exp",
+  "expr": "-2x^2(x^3-2x)+(2x^2)^2",
+  "traps": [
+   [
+    "-2x^5+2x^4+4x^3",
+    "<span class=\"m\" dir=\"ltr\">(2<i>x</i><sup>2</sup>)<sup>2</sup> = 4<i>x</i><sup>4</sup></span>: גם ה-<span class=\"n\">2</span> בריבוע."
+   ],
+   [
+    "-2x^5+4x^4-4x^3",
+    "<span class=\"m\" dir=\"ltr\">−2<i>x</i><sup>2</sup>·(−2<i>x</i>) = +4<i>x</i><sup>3</sup></span>."
+   ],
+   [
+    "-2x^6+4x^4+4x^3",
+    "מחברים מעריכים: <span class=\"m\" dir=\"ltr\">2 + 3 = 5</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-s3",
+  "a": "-7x^2+5x",
+  "form": "exp",
+  "expr": "x(2x^2-1)+2x(3-x)-(2x^3+5x^2)",
+  "traps": [
+   [
+    "4x^3-7x^2+5x",
+    "המינוס הופך את <span class=\"m\" dir=\"ltr\">2<i>x</i><sup>3</sup></span> ל-<span class=\"m\" dir=\"ltr\">−2<i>x</i><sup>3</sup></span>, והוא מתבטל עם <span class=\"m\" dir=\"ltr\">2<i>x</i><sup>3</sup></span> הראשון."
+   ],
+   [
+    "3x^2+5x",
+    "המינוס חל גם על <span class=\"m\" dir=\"ltr\">5<i>x</i><sup>2</sup></span>: <span class=\"m\" dir=\"ltr\">−2<i>x</i><sup>2</sup> − 5<i>x</i><sup>2</sup> = −7<i>x</i><sup>2</sup></span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "cells",
+  "id": "g-bin",
+  "ans": [
+   "2x^2",
+   "-4x",
+   "6x",
+   "-12",
+   "2x^2+2x-12"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "t-b1",
+  "a": "x^2+7x+10",
+  "form": "exp",
+  "expr": "(x+2)(x+5)",
+  "traps": [
+   [
+    "x^2+10",
+    "חסרות שתי המכפלות האמצעיות: <span class=\"m\" dir=\"ltr\">5<i>x</i></span> ו-<span class=\"m\" dir=\"ltr\">2<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-b2",
+  "a": "3x^2+11x-4",
+  "form": "exp",
+  "expr": "(3x-1)(x+4)",
+  "traps": [
+   [
+    "3x^2+13x+4",
+    "האיבר <span class=\"m\" dir=\"ltr\">−1</span> שלילי: <span class=\"m\" dir=\"ltr\">−1·<i>x</i> = −<i>x</i></span> ו-<span class=\"m\" dir=\"ltr\">−1·4 = −4</span>."
+   ],
+   [
+    "3x^2+13x-4",
+    "<span class=\"m\" dir=\"ltr\">−1·<i>x</i> = −<i>x</i></span>, ולכן <span class=\"m\" dir=\"ltr\">12<i>x</i> − <i>x</i> = 11<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-b3",
+  "a": "18x^2-48x+24",
+  "form": "exp",
+  "expr": "3(2x-4)(3x-2)",
+  "traps": [
+   [
+    "6x^2-16x+8",
+    "נשאר עוד לכפול ב-<span class=\"n\">3</span>."
+   ],
+   [
+    "18x^2-16x+8",
+    "ה-<span class=\"n\">3</span> כופל את כל שלושת האיברים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "mc",
+  "id": "s-sq-mc-q",
+  "right": "x2 + 6x + 9",
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-k1",
+  "a": "x^2+8x+16",
+  "form": "exp",
+  "expr": "(4+x)^2",
+  "traps": [
+   [
+    "x^2+16",
+    "חסר האיבר האמצעי: <span class=\"m\" dir=\"ltr\">2·4·<i>x</i> = 8<i>x</i></span>."
+   ],
+   [
+    "x^2+4x+16",
+    "האיבר האמצעי הוא פעמיים המכפלה: <span class=\"m\" dir=\"ltr\">2·4·<i>x</i> = 8<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-k2",
+  "a": "9x^2-36x+36",
+  "form": "exp",
+  "expr": "(6-3x)^2",
+  "traps": [
+   [
+    "3x^2-36x+36",
+    "<span class=\"m\" dir=\"ltr\">(3<i>x</i>)<sup>2</sup> = 9<i>x</i><sup>2</sup></span>: גם ה-<span class=\"n\">3</span> בריבוע."
+   ],
+   [
+    "9x^2-18x+36",
+    "האיבר האמצעי הוא פעמיים המכפלה: <span class=\"m\" dir=\"ltr\">2·6·3<i>x</i> = 36<i>x</i></span>."
+   ],
+   [
+    "36-9x^2",
+    "חסר האיבר האמצעי, והאיבר האחרון חיובי."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-k3",
+  "a": "4x^2-4xy+y^2",
+  "form": "exp",
+  "expr": "(2x-y)^2",
+  "traps": [
+   [
+    "2x^2-4xy+y^2",
+    "<span class=\"m\" dir=\"ltr\">(2<i>x</i>)<sup>2</sup> = 4<i>x</i><sup>2</sup></span>."
+   ],
+   [
+    "4x^2-2xy+y^2",
+    "פעמיים המכפלה: <span class=\"m\" dir=\"ltr\">2·2<i>x</i>·<i>y</i> = 4<i>x</i><i>y</i></span>."
+   ],
+   [
+    "4x^2-y^2",
+    "חסר האיבר האמצעי, והאיבר האחרון חיובי."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-k4",
+  "a": "9x^2+12xy+4y^2",
+  "form": "exp",
+  "expr": "(-3x-2y)^2",
+  "traps": [
+   [
+    "9x^2-12xy+4y^2",
+    "שני האיברים שליליים, ולכן המכפלה שלהם חיובית: <span class=\"m\" dir=\"ltr\">(−3<i>x</i>)·(−2<i>y</i>) = +6<i>x</i><i>y</i></span>."
+   ],
+   [
+    "9x^2+4y^2",
+    "חסר האיבר האמצעי."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-f1",
+  "a": "x^2-16",
+  "form": "exp",
+  "expr": "(x+4)(x-4)",
+  "traps": [
+   [
+    "x^2-8x-16",
+    "בסכום כפול הפרש אין איבר אמצעי: הוא מתבטל."
+   ],
+   [
+    "x^2+16",
+    "הסימן בין הריבועים הוא מינוס."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-f2",
+  "a": "4x^2-49",
+  "form": "exp",
+  "expr": "(2x+7)(2x-7)",
+  "traps": [
+   [
+    "2x^2-49",
+    "<span class=\"m\" dir=\"ltr\">(2<i>x</i>)<sup>2</sup> = 4<i>x</i><sup>2</sup></span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-f3",
+  "a": "9-y^2",
+  "form": "exp",
+  "expr": "(3-y)(3+y)",
+  "traps": [
+   [
+    "y^2-9",
+    "ה-<span class=\"m\" dir=\"ltr\"><i>a</i></span> הוא <span class=\"n\">3</span> וה-<span class=\"m\" dir=\"ltr\"><i>b</i></span> הוא <span class=\"m\" dir=\"ltr\"><i>y</i></span>, ולכן <span class=\"m\" dir=\"ltr\">9 − <i>y</i><sup>2</sup></span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "sorter",
+  "id": "s-sq-id-w",
+  "rows": [
+   "(a + b)2",
+   "(a − b)2",
+   "(a + b)(a − b)",
+   "(a − b)2",
+   "(a + b)(a − b)"
+  ]
+ },
+ {
+  "kind": "mc",
+  "id": "s-fac-mc-q",
+  "right": "2x",
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-g1",
+  "a": "3(2x+3)",
+  "form": "fac",
+  "expr": "6x+9",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": "3"
+ },
+ {
+  "kind": "try",
+  "id": "t-g2",
+  "a": "x(x+5)",
+  "form": "fac",
+  "expr": "x^2+5x",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": "x"
+ },
+ {
+  "kind": "try",
+  "id": "t-g3",
+  "a": "2x(2x^2-x+4)",
+  "form": "fac",
+  "expr": "4x^3-2x^2+8x",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 2,
+  "out": "2x"
+ },
+ {
+  "kind": "try",
+  "id": "t-g4",
+  "a": "5ab(2a-3b)",
+  "form": "fac",
+  "expr": "10a^2b-15ab^2",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": "5ab"
+ },
+ {
+  "kind": "try",
+  "id": "t-h1",
+  "a": "(x+1)(x-1)",
+  "form": "fac",
+  "expr": "x^2-1",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h2",
+  "a": "(3+x)(3-x)",
+  "form": "fac",
+  "expr": "9-x^2",
+  "traps": [
+   [
+    "(x+3)(x-3)",
+    "הסדר חשוב: <span class=\"m\" dir=\"ltr\">9 − <i>x</i><sup>2</sup></span> הוא <span class=\"m\" dir=\"ltr\">(3 + <i>x</i>)(3 − <i>x</i>)</span>. מה שכתבתם שווה <span class=\"m\" dir=\"ltr\"><i>x</i><sup>2</sup> − 9</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h3",
+  "a": "(2x+7)(2x-7)",
+  "form": "fac",
+  "expr": "4x^2-49",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h4",
+  "a": "(8+4x)(8-4x)",
+  "form": "fac",
+  "expr": "64-16x^2",
+  "traps": [],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "s-fac-e-t",
+  "a": "x*e^(2x+1)(6-5x)",
+  "form": "fac",
+  "expr": "6x*e^(2x+1)-5x^2*e^(2x+1)",
+  "traps": [],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": "x*e^(2x+1)"
+ },
+ {
+  "kind": "try",
+  "id": "x-1-t",
+  "a": "-2",
+  "form": "num",
+  "expr": "4-2(3-5)^2+18/3^2",
+  "traps": [
+   [
+    "10",
+    "אל תחסרו <span class=\"m\" dir=\"ltr\">4 − 2</span> בהתחלה. הכפל <span class=\"m\" dir=\"ltr\">2·4</span> קודם לחיסור."
+   ],
+   [
+    "14",
+    "<span class=\"m\" dir=\"ltr\">(−2)<sup>2</sup></span> הוא <span class=\"n\">4</span> חיובי, אבל לפניו כתוב <span class=\"m\" dir=\"ltr\">−2</span> כפול: <span class=\"m\" dir=\"ltr\">−2·4 = −8</span>."
+   ],
+   [
+    "-6",
+    "חיבור וחיסור מבצעים משמאל לימין: קודם <span class=\"m\" dir=\"ltr\">4 − 8</span>, ואז מוסיפים <span class=\"n\">2</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "x-2-t",
+  "a": "150",
+  "form": "num",
+  "expr": "-x^2+40x-150",
+  "traps": [
+   [
+    "350",
+    "<span class=\"m\" dir=\"ltr\">−<i>x</i><sup>2</sup></span> פירושו <span class=\"m\" dir=\"ltr\">−(<i>x</i><sup>2</sup>)</span>. כאשר <span class=\"m\" dir=\"ltr\"><i>x</i> = 10</span> מקבלים <span class=\"m\" dir=\"ltr\">−100</span>, ולא <span class=\"m\" dir=\"ltr\">+100</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "x-3-t",
+  "a": "70x-900",
+  "form": "exp",
+  "expr": "120x-(45x+900)-5x",
+  "traps": [
+   [
+    "70x+900",
+    "המינוס שלפני הסוגריים הופך גם את <span class=\"m\" dir=\"ltr\">+900</span> ל-<span class=\"m\" dir=\"ltr\">−900</span>."
+   ],
+   [
+    "80x-900",
+    "גם <span class=\"m\" dir=\"ltr\">5<i>x</i></span> מופחת: <span class=\"m\" dir=\"ltr\">120 − 45 − 5 = 70</span>."
+   ],
+   [
+    "75x-900",
+    "גם דמי המשלוח <span class=\"m\" dir=\"ltr\">5<i>x</i></span> מופחתים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "x-4-t",
+  "a": "18x^5y^5",
+  "form": "exp",
+  "expr": "(3x^2y)^2*2xy^3",
+  "traps": [
+   [
+    "6x^5y^5",
+    "גם ה-<span class=\"n\">3</span> בריבוע: <span class=\"m\" dir=\"ltr\">3<sup>2</sup> = 9</span>, ואז <span class=\"m\" dir=\"ltr\">9·2 = 18</span>."
+   ],
+   [
+    "18x^4y^5",
+    "<span class=\"m\" dir=\"ltr\"><i>x</i><sup>4</sup>·<i>x</i> = <i>x</i><sup>5</sup></span>: ל-<span class=\"m\" dir=\"ltr\"><i>x</i></span> יש מעריך <span class=\"n\">1</span>."
+   ],
+   [
+    "18x^3y^5",
+    "בתוך הסוגריים: <span class=\"m\" dir=\"ltr\">(<i>x</i><sup>2</sup>)<sup>2</sup> = <i>x</i><sup>4</sup></span>, כופלים את המעריכים."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "x-5-t",
+  "a": "2x^2+13x+30",
+  "form": "exp",
+  "expr": "(x+6)^2-(x+3)(2-x)",
+  "traps": [
+   [
+    "11x+42",
+    "המינוס שלפני המכפלה חל על כל איבריה. השאירו אותה בסוגריים עד שתפתחו אותם."
+   ],
+   [
+    "2x^2+13x+42",
+    "המינוס חל גם על ה-<span class=\"n\">6</span>: <span class=\"m\" dir=\"ltr\">36 − 6 = 30</span>."
+   ],
+   [
+    "2x^2+11x+30",
+    "המינוס הופך את <span class=\"m\" dir=\"ltr\">−<i>x</i></span> ל-<span class=\"m\" dir=\"ltr\">+<i>x</i></span>: <span class=\"m\" dir=\"ltr\">12<i>x</i> + <i>x</i> = 13<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "x-6-t",
+  "a": "3x(x+2)(x-2)",
+  "form": "fac",
+  "expr": "3x^3-12x",
+  "traps": [],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": "3x"
+ },
+ {
+  "kind": "try",
+  "id": "t-h7",
+  "a": "4x^4-4x^2y+y^2",
+  "form": "exp",
+  "expr": "(2x^2-y)^2",
+  "traps": [
+   [
+    "4x^4-y^2",
+    "חסר האיבר האמצעי <span class=\"m\" dir=\"ltr\">2<i>a</i><i>b</i></span>, והאיבר האחרון חיובי."
+   ],
+   [
+    "2x^4-4x^2y+y^2",
+    "<span class=\"m\" dir=\"ltr\">(2<i>x</i><sup>2</sup>)<sup>2</sup> = 4<i>x</i><sup>4</sup></span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h8",
+  "a": "4x^4y^2-16x^2yz^3+16z^6",
+  "form": "exp",
+  "expr": "(2x^2y-4z^3)^2",
+  "traps": [
+   [
+    "4x^4y^2-8x^2yz^3+16z^6",
+    "פעמיים המכפלה: <span class=\"m\" dir=\"ltr\">2·2·4 = 16</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h9",
+  "a": "9x^2b^6-18xb^3a+9a^2",
+  "form": "exp",
+  "expr": "(3xb^3-3a)^2",
+  "traps": [
+   [
+    "9x^2b^6-9xb^3a+9a^2",
+    "פעמיים המכפלה: <span class=\"m\" dir=\"ltr\">2·3·3 = 18</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h10",
+  "a": "12x^2-88x+167",
+  "form": "exp",
+  "expr": "3(2x-7)^2-(4x-20)",
+  "traps": [
+   [
+    "12x^2-88x+127",
+    "המינוס הופך את <span class=\"m\" dir=\"ltr\">−20</span> ל-<span class=\"m\" dir=\"ltr\">+20</span>: <span class=\"m\" dir=\"ltr\">147 + 20 = 167</span>."
+   ],
+   [
+    "12x^2-80x+167",
+    "<span class=\"m\" dir=\"ltr\">−84<i>x</i> − 4<i>x</i> = −88<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h11",
+  "a": "-9x^3+10x^2+10x-8",
+  "form": "exp",
+  "expr": "(x^2+2)(3x-2)-2(2-2x)(1-3x^2)",
+  "traps": [
+   [
+    "15x^3-14x^2+2x",
+    "ה-<span class=\"m\" dir=\"ltr\">−2</span> הופך את כל הסימנים של המכפלה השנייה."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h12",
+  "a": "-8x^4-2x^3+26x^2+4x-20",
+  "form": "exp",
+  "expr": "(x^2-2)(4x+5)(2-2x)",
+  "traps": [],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-h13",
+  "a": "4xy(2x-3y+1)",
+  "form": "fac",
+  "expr": "8x^2y-12xy^2+4xy",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 2,
+  "out": "4xy"
+ },
+ {
+  "kind": "try",
+  "id": "t-h14",
+  "a": "9",
+  "form": "num",
+  "expr": "5-3(2-4)^3/6",
+  "traps": [
+   [
+    "1",
+    "חיסור של מספר שלילי הוא חיבור: <span class=\"m\" dir=\"ltr\">5 − (−4) = 9</span>."
+   ],
+   [
+    "-27",
+    "אל תחסרו <span class=\"m\" dir=\"ltr\">5 − 3</span> בהתחלה. הכפל והחילוק קודמים."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ }
+]

@@ -68,3 +68,7 @@ for m in re.finditer(r'class="([^"]+)"', slides_html + tail + R('deck.js') + R('
 missing = sorted(c for c in used if not re.search(r'\.' + re.escape(c) + r'(?![\w-])', css))
 print('slides', html.count('<section class="slide'), 'activities', NACT[0], 'try', NTRY, 'mc', NMC, 'math lines checked', NCHK[0], 'bytes', len(html))
 print('classes without a rule:', missing)
+
+os.makedirs(os.path.join(H, 'tests'), exist_ok=True)
+json.dump(MAN, open(os.path.join(H, 'tests', 'manifest.json'), 'w', encoding='utf8'), ensure_ascii=False, indent=1)
+print('manifest', len(MAN))

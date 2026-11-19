@@ -481,3 +481,8 @@ svg.diag .mi{font-family:'Times New Roman',Times,serif;font-style:italic}
 .pd-note{background:rgba(127,227,214,.12);border-right:5px solid #7fe3d6;border-radius:12px;padding:8px 16px;margin:-6px 0 16px}
 .pd-box ul{font-size:22px}
 .kick .goal{font-size:18px}
+/* the anatomy of an expression: every symbol on one line, its label right under it */
+.anat{align-items:flex-start;gap:0}
+.anat .pc{padding:0 6px;line-height:1.15}
+.anat .pc>span:first-child{display:block;height:74px}
+.anat .tag{margin-top:6px}

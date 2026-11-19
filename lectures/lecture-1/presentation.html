@@ -593,6 +593,11 @@ svg.diag .mi{font-family:'Times New Roman',Times,serif;font-style:italic}
 .pd-note{background:rgba(127,227,214,.12);border-right:5px solid #7fe3d6;border-radius:12px;padding:8px 16px;margin:-6px 0 16px}
 .pd-box ul{font-size:22px}
 .kick .goal{font-size:18px}
+/* the anatomy of an expression: every symbol on one line, its label right under it */
+.anat{align-items:flex-start;gap:0}
+.anat .pc{padding:0 6px;line-height:1.15}
+.anat .pc>span:first-child{display:block;height:74px}
+.anat .tag{margin-top:6px}
 </style>
 </head>
 <body>
@@ -833,17 +838,25 @@ function pretty(n){switch(n.t){case 'num':return String(n.v);case 'var':return '
  case 'pow':return pretty(n.a)+'<sup>'+pretty(bare(n.b))+'</sup>';
  case 'mul':return n.a.map((x,j)=>{if(x.t==='inv')return '/'+pretty(x.a);const prev=j?n.a[j-1]:null;const dot=j&&(x.t==='num'||x.t==='neg'||(prev&&(bare(prev).t==='num'||prev.t==='inv')&&x.t==='num'));return (dot?'·':'')+pretty(x);}).join('');
  case 'add':return n.a.map((x,j)=>(j?(x.s>0?' + ':' − '):(x.s>0?'':'−'))+pretty(x.n)).join('');}}
-window.__alg={parse,equiv,pretty,ev,norm};
+window.__alg={parse,equiv,pretty,ev,norm,judge:i=>judge(i)};
 
 /* ---------- one checked answer: used by every typed input ---------- */
-function judge(inp){const raw=inp.value.trim();if(!raw)return {st:'empty'};let u,a;try{u=parse(raw);}catch(e){return {st:'bad'};}
- a=parse(inp.dataset.a);if(!equiv(u,a)){let trap=null;try{JSON.parse(inp.dataset.traps||'[]').some(([x,msg])=>{if(equiv(u,parse(x))){trap=msg;return true;}});}catch(e){}return {st:'no',trap};}
- const form=inp.dataset.form||'';
+/* the answer data sits on the input itself (tables, grids) or on its exercise (.try) */
+function mono(n){if(n.t==='num'||n.t==='var')return true;if(n.t==='neg')return mono(n.a);
+ if(n.t==='pow'){const e=n.b.t==='neg'?n.b.a:n.b;return n.a.t==='var'&&e.t==='num';}
+ if(n.t==='mul'){const seen={};let nums=0;for(let j=0;j<n.a.length;j++){let f=n.a[j];if(j===0&&f.t==='neg')f=f.a;if(f.t==='num'){nums++;if(j>0)return false;}else if(f.t==='var'||(f.t==='pow'&&mono(f))){const v=f.t==='var'?f.v:f.a.v;if(seen[v])return false;seen[v]=1;}else return false;}return nums<=1;}
+ return false;}
+function tidy(u){return u.t==='add'?u.a.every(x=>mono(x.n)):mono(u);}
+function judge(inp){const ds=(inp.dataset.a!==undefined?inp:inp.closest('.try')).dataset;if(ds.a===undefined||ds.a==='')return {st:'bad'};
+ const raw=inp.value.trim();if(!raw)return {st:'empty'};let u,a;try{u=parse(raw);}catch(e){return {st:'bad'};}
+ a=parse(ds.a);if(!equiv(u,a)){let trap=null;try{JSON.parse(ds.traps||'[]').some(([x,msg])=>{if(equiv(u,parse(x))){trap=msg;return true;}});}catch(e){}return {st:'no',trap};}
+ const form=ds.form||'';
  if(form==='num'){if(bare(u).t!=='num'&&!(bare(u).t==='neg'&&bare(bare(u).a).t==='num'))return {st:'half',msg:'הערך נכון, אבל עדיין כתוב כתרגיל. השלימו את החישוב עד למספר אחד.'};}
- if(form==='exp'){if(hasPar(u))return {st:'half',msg:'הביטוי שווה לביטוי המקורי, אבל נשארו בו סוגריים. פתחו אותם.'};if(terms(u)>+(inp.dataset.terms||99))return {st:'half',msg:'הביטוי נכון, אבל אפשר עוד לכנס איברים דומים.'};}
+ if(form==='exp'){if(hasPar(u))return {st:'half',msg:'הביטוי שווה לביטוי המקורי, אבל נשארו בו סוגריים. פתחו אותם.'};if(terms(u)>+(ds.terms||99))return {st:'half',msg:'הביטוי נכון, אבל אפשר עוד לכנס איברים דומים.'};
+  if(!tidy(u))return {st:'half',msg:'הביטוי שווה, אבל אפשר עוד לפשט: בכל איבר צריך להישאר מספר אחד, וכל אות פעם אחת עם המעריך שלה.'};}
  if(form==='fac'){const f=factors(u);if(!f.sums||bare(u).t==='add')return {st:'half',msg:'הביטוי שווה, אבל הוא עדיין סכום. התשובה צריכה להיות מכפלה: גורם כפול סוגריים.'};
-  if(inp.dataset.out){const mono=f.mono.length?{t:'mul',a:f.mono}:{t:'num',v:1},o=parse(inp.dataset.out);if(!equiv(mono,o)&&!equiv({t:'neg',a:mono},o))return {st:'half',msg:'הפירוק נכון, אבל אפשר להוציא גורם משותף גדול יותר.'};}
-  if(+(inp.dataset.nb||0)>f.sums)return {st:'half',msg:'נכון עד כאן, אבל אפשר להמשיך ולפרק גם את מה שבתוך הסוגריים.'};}
+  if(ds.out){const mono_=f.mono.length?{t:'mul',a:f.mono}:{t:'num',v:1},o=parse(ds.out);if(!equiv(mono_,o)&&!equiv({t:'neg',a:mono_},o))return {st:'half',msg:'הפירוק נכון, אבל אפשר להוציא גורם משותף גדול יותר.'};}
+  if(+(ds.nb||0)>f.sums)return {st:'half',msg:'נכון עד כאן, אבל אפשר להמשיך ולפרק גם את מה שבתוך הסוגריים.'};}
  return {st:'ok'};}
 const BADREAD='לא הצלחנו לקרוא את הביטוי. בדקו שכל סוגריים נסגרים, ושחזקה כתובה עם הסימן ^ (למשל x^2).';
 
@@ -851,9 +864,12 @@ const BADREAD='לא הצלחנו לקרוא את הביטוי. בדקו שכל �
 function ins(inp,t){const a=inp.selectionStart??inp.value.length,b=inp.selectionEnd??a;if(t==='⌫'){if(a===b&&a>0)inp.setRangeText('',a-1,a,'end');else inp.setRangeText('',a,b,'end');}else inp.setRangeText(t,a,b,'end');inp.dispatchEvent(new Event('input',{bubbles:true}));}
 document.addEventListener('pointerdown',e=>{const k=e.target.closest('.kp button');if(!k)return;e.preventDefault();const inp=k.closest('.kp').__inp;if(inp){inp.focus();ins(inp,k.dataset.k);}});
 const kp=document.createElement('div');kp.className='kp';document.body.appendChild(kp);let kpT=null;
+function placeKp(){const inp=kp.__inp;if(!inp||kp.style.display==='none')return;const r=inp.getBoundingClientRect();const host=inp.closest('.try,.cells');const fb=host&&host.querySelector('.fbbar');const rb=fb?fb.getBoundingClientRect():r;
+ const w=kp.offsetWidth,h=kp.offsetHeight;let top=Math.max(r.bottom,rb.bottom)+6;if(top+h>innerHeight-48)top=r.top-h-6;kp.style.left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2))+'px';kp.style.top=top+'px';}
 function showKp(inp){clearTimeout(kpT);const vars=(inp.closest('[data-vars]')?.dataset.vars||'x').split('');
- kp.innerHTML=[...vars,'^','(',')','+','-','*','⌫'].map(k=>`<button type="button" data-k="${k}">${k==='^'?'חזקה ^':k==='-'?'−':k==='*'?'·':k}</button>`).join('');kp.__inp=inp;
- const r=inp.getBoundingClientRect();const fbx=inp.closest('.try,.cells');const fb=fbx&&fbx.querySelector('.fbbar');const rb=fb?fb.getBoundingClientRect():r;kp.style.display='flex';const w=kp.offsetWidth,h=kp.offsetHeight;kp.style.left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2))+'px';kp.style.top=Math.min(innerHeight-h-50,rb.bottom+6)+'px';}
+ kp.innerHTML=[...vars,'^','(',')','+','-','*','⌫'].map(k=>`<button type="button" data-k="${k}">${k==='^'?'חזקה ^':k==='-'?'−':k==='*'?'·':k}</button>`).join('');kp.__inp=inp;kp.style.display='flex';placeKp();}
+new MutationObserver(()=>placeKp()).observe(document.getElementById('stage'),{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
+addEventListener('resize',placeKp);
 document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('input.ex'))showKp(e.target);});
 document.addEventListener('focusout',e=>{if(e.target.matches&&e.target.matches('input.ex'))kpT=setTimeout(()=>{kp.style.display='none';},120);});
 
