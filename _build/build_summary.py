@@ -60,6 +60,8 @@ table.tbl2{width:100%;margin:1mm 0 2mm;font-size:11pt}.tbl2 th{background:var(--
 .icons{direction:ltr;display:flex;gap:1.5mm;justify-content:center;align-items:center;font-weight:700}.icons svg{width:8mm;height:8mm}
 svg.nl{width:100mm;max-width:100%;height:auto;display:block;margin:1mm auto;direction:ltr;font-family:"David"}svg.pbar{width:100mm;display:block;margin:1mm auto;direction:ltr}
 .xin{direction:ltr}.tsl .m{white-space:normal}
+.recp{background:#eef8f6;border-right:1.2mm solid #0f9d90;padding:1mm 2.5mm;border-radius:1.2mm;font-size:11pt}
+li.ebad{color:#b3261e}li.ebad .m{text-decoration:line-through}.efix{background:#e8f6ee;border-right:1.2mm solid #25a65f;padding:1mm 2.5mm;border-radius:1.2mm;margin:1mm 0}.efr{display:flex;justify-content:space-between;gap:3mm;padding:.4mm 0}
 
 .goal{color:#087469;font-size:10.8pt;margin:-.4mm 0 1mm}
 '''

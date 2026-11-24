@@ -12,7 +12,8 @@ LEC = {
          'פתיחת סוגריים, מינוס לפני סוגריים, ופישוט ביטויים', 'שלוש נוסחאות הכפל המקוצר', 'הוצאת גורם משותף ופירוק לגורמים', 'תרגילים מסכמים, ותרגול עצמי לבית לפי נושאים']),
  2: dict(title='משוואות, מערכות משוואות, אחוזים ואי שוויונים', learn=['חזרה קצרה על הכלים של מפגש 1', 'משוואה ממעלה ראשונה עם נעלם אחד: המאזניים, העברת אגף ובדיקה בהצבה', 'משוואות עם שברים: כפל במכנה המשותף, ונעלם במכנה עם תחום הגדרה',
          'מערכת של שתי משוואות: שיטת ההצבה ושיטת השוואת המקדמים', 'אחוזים: אחוז מסכום, מקדם שינוי, שינויים ברצף ושיעור שינוי', 'אי שוויונים: פתרון, ציר המספרים, והיפוך הסימן בכפל במספר שלילי',
-         'תרגילים מסכמים מסיפורים ניהוליים, ותרגול עצמי לבית'])}
+         'תרגילים מסכמים מסיפורים ניהוליים, ותרגול עצמי לבית'],
+         home='השקפים האחרונים של המצגת, לפי נושאים. בכל נושא: ״מצאו את הטעות״, ותרגילים מהקל אל הקשה עם פתרון מפורט. בסוף: ממילים למתמטיקה, ושלוש בעיות מילוליות.')}
 BUILT = set(LEC)
 for _k, _v in LEC.items():
     _d = open(os.path.join(H, '..', 'lectures', f'lecture-{_k}', 'presentation.html'), encoding='utf8').read()
@@ -78,7 +79,7 @@ def lec_card(i):
 <a class="lk s" href="lectures/lecture-{i}/summary.pdf" target="_blank" rel="noopener"><span class="e">📄</span><span><b>סיכום המפגש (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, דוגמאות, כללים, תרגילים עם פתרונות, ומילון מושגים.</span></span></a>
 </div></div>
 <div class="grp"><h5>3. תרגול</h5><div class="links">
-<a class="lk p" href="lectures/lecture-{i}/presentation.html#s-home"><span class="e">✍️</span><span><b>תרגול עצמי לבית, בתוך המצגת</b><span class="d">השקפים האחרונים של המצגת, לפי נושאים, עם בדיקה, רמזים ופתרון בשלבים.</span></span></a>
+<a class="lk p" href="lectures/lecture-{i}/presentation.html#s-home"><span class="e">✍️</span><span><b>תרגול עצמי לבית, בתוך המצגת</b><span class="d">{L.get('home', 'השקפים האחרונים של המצגת, לפי נושאים, עם בדיקה, רמזים ופתרון בשלבים.')}</span></span></a>
 <a class="lk s" href="materials/booklet-m{i}.pdf" target="_blank" rel="noopener"><span class="e">📘</span><span><b>חוברת התרגילים: מפגש {i}</b><span class="d">תרגילים {n(f'{i}-1')} עד {n(f'{i}-{nb}')}, מהקל אל הקשה, עם תשובות סופיות בסוף.</span></span></a>
 <a class="lk r" href="materials/booklet-m{i}-solutions.pdf" target="_blank" rel="noopener"><span class="e">✅</span><span><b>פתרונות החוברת: מפגש {i} (PDF)</b><span class="d">פתרון מלא בשלבים לכל תרגיל.</span></span></a>
 </div></div>

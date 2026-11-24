@@ -152,6 +152,14 @@ $$('.ops').forEach(b=>{const C=JSON.parse(b.dataset.cfg),ex=$('.opx',b),log=$('.
  $('.shw',b).addEventListener('click',()=>{if(k<C.states.length)adv();});
  b.__solve=()=>{while(k<C.states.length)adv();};b.__k=()=>k;draw();});
 
+/* ---------- find the mistake: click the first wrong line of a student's solution ---------- */
+$$('.err').forEach(b=>{const bad=+b.dataset.bad,box=$('.elines',b),ls=$$('.el',box),fb=$('.fbbar',b),fx=$('.efix',b),idle=fb.innerHTML;
+ const clear=()=>ls.forEach(x=>{['okl','bad','after','later','pick'].forEach(c=>x.classList.toggle(c,false));});
+ ls.forEach(l=>l.addEventListener('click',()=>{if(b.classList.contains('solved'))return;const i=+l.dataset.i;ls.forEach(x=>x.classList.toggle('pick',false));
+  if(i===bad){l.classList.add('bad');b.classList.add('solved');box.classList.add('solved');ls.forEach((x,k)=>{if(k<bad)x.classList.add('okl');if(k>bad)x.classList.add('after');});fx.hidden=false;say(fb,true,'<b>נכון, כאן הטעות.</b> '+b.dataset.w);}
+  else if(i<bad){l.classList.add('okl','pick');say(fb,false,'<b>השורה הזו נכונה.</b> '+l.dataset.w+' המשיכו לחפש בשורות שאחריה.');}
+  else{l.classList.add('later','pick');say(fb,'half','<b>השורה הזו ממשיכה טעות שקרתה קודם.</b> היא נובעת מהשורה שלפניה, אבל הטעות עצמה נמצאת בשורה מוקדמת יותר. חפשו למעלה.');}}));
+ $('.rst',b).addEventListener('click',()=>{clear();b.classList.toggle('solved',false);box.classList.toggle('solved',false);fx.hidden=true;fb.className='fbbar';fb.innerHTML=idle;});});
 /* ---------- sorter: each row has one right answer ---------- */
 $$('.sorter').forEach(b=>{const rows=$$('.srow',b),fb=$('.fbbar',b),sc=$('.score',b);
  const upd=()=>{const d=rows.filter(r=>r.classList.contains('solved')).length;sc.textContent=d+' / '+rows.length;if(d===rows.length){b.classList.add('solved');say(fb,true,'כל השורות נכונות. '+fb.innerHTML);}};

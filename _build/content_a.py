@@ -112,7 +112,7 @@ def SORTER(aid, title, h, task, options, rows):
         t = ''.join(f'<tr><td>{TX(a)}</td><td><b>{TX(options[b])}</b></td><td>{TX(c)}</td></tr>' for a, b, c in rows)
         S(aid, title, h, f'<p>{TX(task)}</p><table class="tbl2"><tr><th>השורה</th><th>תשובה</th><th>נימוק</th></tr>{t}</table>')
         return
-    MAN.append(dict(kind='sorter', id=aid + '-w', rows=[re.sub('<[^>]+>', '', TX(options[b])) for _, b, _ in rows]))
+    MAN.append(dict(kind='sorter', id=aid + '-w', rows=[_html.unescape(re.sub('<[^>]+>', '', TX(options[b]))) for _, b, _ in rows]))
     NACT[0] += 1
     r = ''
     for a, b, c in rows:
@@ -237,8 +237,15 @@ def TRY(qid, q, a, hints=(), steps=(), form=None, terms=None, out=None, nb=None,
             f'<div class="fbbar">{_idle(_form(a, form), _qe[-1] if _qe else "")}</div><div class="hints">{hh}</div><div class="tsol" hidden>{sol}</div></div>')
 
 
-def TRYS(sid, title, h, items, intro=None, cols=2, kick='נסו בעצמכם', after=''):
-    pre = f'<p class="lead">{TX(intro)}</p>' if intro else ''
+def RECIPE(items):
+    """The order of work for this kind of exercise, as numbered chips: always on screen beside the practice."""
+    if MODE == 'pdf':
+        return '<p class="recp"><b>דרך הפתרון:</b> ' + '; '.join(f'({i}) {TX(t)}' for i, t in enumerate(items, 1)) + '.</p>'
+    return '<div class="recipe"><b>דרך הפתרון</b>' + ''.join(f'<span><i>{i}</i><em>{TX(t)}</em></span>' for i, t in enumerate(items, 1)) + '</div>'
+
+
+def TRYS(sid, title, h, items, intro=None, cols=2, kick='נסו בעצמכם', after='', recipe=None):
+    pre = (RECIPE(recipe) if recipe else '') + (f'<p class="lead">{TX(intro)}</p>' if intro else '')
     if MODE == 'pdf':
         S(sid, title, h, pre + ''.join(items) + after); return
     S(sid, title, h, pre + f'<div class="trys c{cols}">' + ''.join(items) + '</div>' + after, kick=KICK(kick))
@@ -505,3 +512,54 @@ def PBAR(rows, n0=1, W=560, unit=None):
             x += w
         g += _g(n0 + i, inner, 'fade')
     return f'<div class="diagw"><svg class="diag pbar" dir="ltr" viewBox="0 0 {W} {20 + len(rows) * 58}" role="img">{g}</svg></div>'
+
+
+# ---------------------------------------------------------------- find the mistake
+def _sol_wrong(sol, wrong):
+    if wrong is None: return None, None
+    if isinstance(sol, tuple): return ineq_parts(wrong), None
+    if isinstance(sol, dict):
+        return ({k: ev(v) for k, v in wrong.items()} if isinstance(wrong, dict) else {next(iter(sol)): ev(wrong)}), None
+    return None, wrong
+
+
+def ERR(sid, title, h, q, lines, bad, why, fix, expr=None, ans=None, wrong=None, show=None, kick=None):
+    """A solution written by a student, with one wrong line. The student clicks the first wrong line.
+    lines: (math, note); the note says why a right line is right. Lines before `bad` are checked like a worked solution,
+    the line `bad` must FAIL the check, and the lines from it on must agree with the student's wrong answer `wrong`.
+    fix: the right continuation from line `bad`, (math, note), checked. Without expr, '=' lines are checked against ans."""
+    sol = _sol_of(expr, ans) if expr else None
+    target = ans
+    labels = [x[2] if len(x) > 2 else '' for x in lines]
+    lines = [(x[0], x[1]) for x in lines]
+    for x in lines[:bad]: _line(x, target, sol)
+    m = lines[bad][0]
+    try:
+        step_check(m, target, sol); ok = True
+    except AssertionError:
+        ok = False
+    assert not ok, ('the wrong line passes the check', sid, m)
+    NCHK[0] += 1
+    sw, tw = _sol_wrong(sol, wrong)
+    for x in lines[bad:]:
+        if not x[0].startswith('~'): step_check(x[0], tw, sw); NCHK[0] += 1
+    fixr = [_line(x, target, sol) for x in fix]
+    if MODE == 'pdf': q = q.replace('לחצו על השורה הראשונה', 'מצאו את השורה הראשונה')
+    stem = f'<p>{TX(q)}</p>' + (show if show is not None else (EQ(expr) if expr else ''))
+    fixh = ''.join(f'<div class="efr"><span>{TX(n)}</span>{EQ(mm) if mm else ""}</div>' for mm, n in fixr)
+    MAN.append(dict(kind='err', id=sid + '-w', bad=bad, n=len(lines)))
+    if MODE == 'pdf':
+        li = ''.join(f'<li{" class=ebad" if i == bad else ""}>{TX(labels[i])} {MI(mm.lstrip("~")) if mm.strip("~") else ""}' + (' <b>כאן הטעות.</b>' if i == bad else '') + '</li>' for i, (mm, n) in enumerate(lines))
+        S(sid, title, h, f'<div class="qstem">{stem}</div><ol class="steps">{li}</ol>' + BAND('trap', why) + f'<div class="efix">{fixh}</div>')
+        return
+    NACT[0] += 1
+    ls = ''
+    for i, (mm, n) in enumerate(lines):
+        body = EQ(mm.lstrip('~')) if mm.strip('~') else ''
+        lab = TX(labels[i]) if labels[i] else (TX(n) if not body else '')
+        ls += f'<button class="el" data-i="{i}" data-w="{_html.escape(TX(n), quote=True)}"><b class="eln">{i + 1}</b>' + (f'<span class="eln2">{lab}</span>' if lab else '') + f'{body}</button>'
+    body = (f'<div class="act err qg" id="{sid}-w" data-bad="{bad}" data-w="{_html.escape(TX(why), quote=True)}"><div class="qr"><div class="card qstem">{stem}</div>'
+            f'<div class="fbbar">לחצו על השורה הראשונה שבה נפלה הטעות. כל שורה שתבחרו תקבל הסבר.</div>'
+            f'<div class="actbar">{RST}</div></div>'
+            f'<div class="solw"><div class="elines">{ls}</div><div class="efix" hidden><b class="ct">הפתרון הנכון, מהשורה שתוקנה</b>{fixh}</div></div></div>')
+    S(sid, title, h, body, kick=kick or KICK('מצאו את הטעות'), cls='qslide')

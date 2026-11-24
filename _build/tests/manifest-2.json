@@ -468,12 +468,69 @@
  },
  {
   "kind": "try",
-  "id": "t-he1",
-  "a": "4",
+  "id": "t-d1",
+  "a": "1",
   "form": "num",
-  "expr": "x^2+4x+3=x^2+2x+11",
+  "expr": "((x)/(x-2))-((1)/(4))=((5)/(4x-8))",
   "traps": [],
   "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d2",
+  "a": "-1/3",
+  "form": "num",
+  "expr": "((x)/(x-3))+((1)/(x(x-3)))=1",
+  "traps": [],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-e-w",
+  "bad": 2,
+  "n": 5
+ },
+ {
+  "kind": "try",
+  "id": "t-he3",
+  "a": "5",
+  "form": "num",
+  "expr": "3x+5=20",
+  "traps": [
+   [
+    "25/3",
+    "כש-<span class=\"m\" dir=\"ltr\">+5</span> עובר לאגף השני הוא הופך ל-<span class=\"m\" dir=\"ltr\">−5</span>: <span class=\"m\" dir=\"ltr\">20 − 5 = 15</span>, ולא <span class=\"m\" dir=\"ltr\">20 + 5</span>."
+   ],
+   [
+    "15",
+    "זה הערך של <span class=\"m\" dir=\"ltr\">3<i>x</i></span>. נשאר לחלק ב-<span class=\"n\">3</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-he4",
+  "a": "7",
+  "form": "num",
+  "expr": "4(x-1)=2x+10",
+  "traps": [
+   [
+    "3",
+    "כש-<span class=\"m\" dir=\"ltr\">−4</span> עובר לאגף הימני הוא הופך ל-<span class=\"m\" dir=\"ltr\">+4</span>: <span class=\"m\" dir=\"ltr\">10 + 4 = 14</span>."
+   ],
+   [
+    "11/2",
+    "ה-<span class=\"n\">4</span> כופל גם את <span class=\"m\" dir=\"ltr\">−1</span>: <span class=\"m\" dir=\"ltr\">4<i>x</i> − 4</span>, ולא <span class=\"m\" dir=\"ltr\">4<i>x</i> − 1</span>."
+   ]
+  ],
+  "nsteps": 5,
   "nhints": 1,
   "out": ""
  },
@@ -489,20 +546,173 @@
     "המינוס שלפני <span class=\"m\" dir=\"ltr\">(<i>x</i> + 4)</span> הופך את שני הסימנים: <span class=\"m\" dir=\"ltr\">−<i>x</i> − 4</span>."
    ]
   ],
-  "nsteps": 3,
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-he1",
+  "a": "4",
+  "form": "num",
+  "expr": "x^2+4x+3=x^2+2x+11",
+  "traps": [
+   [
+    "7",
+    "כש-<span class=\"n\">3</span> עובר לאגף הימני הוא הופך ל-<span class=\"m\" dir=\"ltr\">−3</span>: <span class=\"m\" dir=\"ltr\">11 − 3 = 8</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-f-w",
+  "bad": 2,
+  "n": 5
+ },
+ {
+  "kind": "try",
+  "id": "t-hf3",
+  "a": "20",
+  "form": "num",
+  "expr": "((x)/(5))+3=7",
+  "traps": [
+   [
+    "4",
+    "זה הערך של השבר <span class=\"m\" dir=\"ltr\"><i>x</i>/5</span>. נשאר לכפול ב-<span class=\"n\">5</span>."
+   ],
+   [
+    "50",
+    "קודם מעבירים את <span class=\"n\">3</span> עם סימן הפוך: <span class=\"m\" dir=\"ltr\">7 − 3 = 4</span>. רק אז כופלים ב-<span class=\"n\">5</span>."
+   ]
+  ],
+  "nsteps": 5,
   "nhints": 1,
   "out": ""
  },
  {
   "kind": "try",
-  "id": "t-hf1",
+  "id": "t-hf4",
+  "a": "7",
+  "form": "num",
+  "expr": "((x+1)/(2))=((x+5)/(3))",
+  "traps": [
+   [
+    "4",
+    "כל מונה נכנס לסוגריים, וכל איבר בו מוכפל: <span class=\"m\" dir=\"ltr\">3<i>x</i> + 3</span> ו-<span class=\"m\" dir=\"ltr\">2<i>x</i> + 10</span>."
+   ],
+   [
+    "9",
+    "ה-<span class=\"n\">3</span> כופל גם את <span class=\"n\">1</span>: <span class=\"m\" dir=\"ltr\">3(<i>x</i> + 1) = 3<i>x</i> + 3</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hf5",
+  "a": "1",
+  "form": "num",
+  "expr": "((2x+1)/(3))-((x-1)/(2))=1",
+  "traps": [
+   [
+    "-4",
+    "הכפל ב-<span class=\"n\">6</span> חל על כל איבר, גם על <span class=\"n\">1</span> שבאגף הימני: <span class=\"m\" dir=\"ltr\">6·1 = 6</span>."
+   ],
+   [
+    "7",
+    "מינוס כפול מינוס: <span class=\"m\" dir=\"ltr\">−3·(−1) = +3</span>, ולא <span class=\"m\" dir=\"ltr\">−3</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "h-f2-t",
   "a": "4.75",
   "form": "num",
   "expr": "((1-x)/(3))-((2+4x)/(7))+1=x-8",
-  "traps": [],
-  "nsteps": 5,
+  "traps": [
+   [
+    "0.5",
+    "גם <span class=\"n\">1</span> וגם <span class=\"m\" dir=\"ltr\"><i>x</i> − 8</span> מוכפלים ב-<span class=\"n\">21</span>, ולא רק השברים."
+   ],
+   [
+    "11.875",
+    "המינוס שלפני השבר השני חל על כל המונה: <span class=\"m\" dir=\"ltr\">−3(2 + 4<i>x</i>) = −6 − 12<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 8,
   "nhints": 2,
   "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hd1",
+  "a": "4",
+  "form": "num",
+  "expr": "((12)/(x))=3",
+  "traps": [
+   [
+    "36",
+    "כופלים את שני האגפים ב-<span class=\"m\" dir=\"ltr\"><i>x</i></span>: <span class=\"m\" dir=\"ltr\">12 = 3<i>x</i></span>. לא כופלים את <span class=\"n\">12</span> ב-<span class=\"n\">3</span>."
+   ],
+   [
+    "1/4",
+    "מ-<span class=\"m\" dir=\"ltr\">12 = 3<i>x</i></span> מחלקים את <span class=\"n\">12</span> ב-<span class=\"n\">3</span>, ולא את <span class=\"n\">3</span> ב-<span class=\"n\">12</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hd2",
+  "a": "2",
+  "form": "num",
+  "expr": "((x+2)/(x-1))=4",
+  "traps": [
+   [
+    "1",
+    "ה-<span class=\"n\">4</span> כופל את כל המכנה: <span class=\"m\" dir=\"ltr\">4(<i>x</i> − 1) = 4<i>x</i> − 4</span>. וחוץ מזה, <span class=\"m\" dir=\"ltr\"><i>x</i> = 1</span> מאפס את המכנה, ולכן הוא מחוץ לתחום ההגדרה."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-m-w",
+  "bad": 1,
+  "n": 5
+ },
+ {
+  "kind": "try2",
+  "id": "t-hm5",
+  "a": {
+   "x": "6",
+   "y": "3"
+  },
+  "nsteps": 6,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hm6",
+  "a": {
+   "x": "4",
+   "y": "2"
+  },
+  "nsteps": 8,
+  "nhints": 2
  },
  {
   "kind": "try2",
@@ -545,35 +755,143 @@
   "nhints": 1
  },
  {
+  "kind": "err",
+  "id": "hx-p-w",
+  "bad": 2,
+  "n": 4
+ },
+ {
   "kind": "try",
-  "id": "t-hp1",
-  "a": "198",
+  "id": "t-hp3",
+  "a": "36",
   "form": "num",
   "expr": "",
   "traps": [
    [
-    "200",
-    "הירידה היא <span class=\"n\">10%</span> מ-<span class=\"n\">220</span>, לא מ-<span class=\"n\">200</span>."
+    "16",
+    "לא מחלקים את <span class=\"n\">240</span> ב-<span class=\"n\">15</span>. <span class=\"n\">15%</span> הם <span class=\"m\" dir=\"ltr\">0.15</span>, וכופלים: <span class=\"m\" dir=\"ltr\">0.15·240</span>."
    ]
   ],
-  "nsteps": 2,
+  "nsteps": 4,
   "nhints": 1,
   "out": ""
  },
  {
   "kind": "try",
-  "id": "t-hp2",
-  "a": "-25",
+  "id": "t-hp4",
+  "a": "220",
   "form": "num",
   "expr": "",
   "traps": [
    [
-    "25",
-    "המחיר ירד, ולכן השיעור שלילי."
+    "30",
+    "זה גובה ההנחה. המחיר החדש הוא <span class=\"m\" dir=\"ltr\">250 − 30</span>."
+   ],
+   [
+    "238",
+    "הירידה היא <span class=\"n\">12%</span> מ-<span class=\"n\">250</span>, כלומר <span class=\"n\">30</span> ש״ח, ולא <span class=\"n\">12</span> ש״ח."
    ]
   ],
-  "nsteps": 3,
+  "nsteps": 4,
   "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp5",
+  "a": "28",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "21.875",
+    "חילקתם במחיר החדש. מחלקים במחיר הקודם, <span class=\"n\">2,500</span>."
+   ],
+   [
+    "0.28",
+    "זה השיעור כמספר עשרוני. כפלו ב-<span class=\"n\">100</span> כדי לקבל אחוזים."
+   ],
+   [
+    "700",
+    "זה השינוי בש״ח. השאלה שואלת באחוזים."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp6",
+  "a": "5000",
+  "form": "num",
+  "expr": "x",
+  "traps": [
+   [
+    "4838",
+    "לא מורידים <span class=\"n\">18%</span> מ-<span class=\"n\">5,900</span>: ה-<span class=\"n\">18%</span> נלקחו מהמחיר שלפני המע״מ. כותבים משוואה: <span class=\"m\" dir=\"ltr\">1.18<i>x</i> = 5900</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-i-w",
+  "bad": 3,
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-hi2",
+  "a": "x≤5",
+  "form": "ineq",
+  "expr": "2x-3≤7",
+  "traps": [
+   [
+    "x≥5",
+    "מחלקים ב-<span class=\"n\">2</span>, מספר חיובי: הסימן לא מתהפך."
+   ],
+   [
+    "x≤2",
+    "כש-<span class=\"m\" dir=\"ltr\">−3</span> עובר לצד השני הוא הופך ל-<span class=\"m\" dir=\"ltr\">+3</span>: <span class=\"m\" dir=\"ltr\">7 + 3 = 10</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hi3",
+  "a": "x<-2",
+  "form": "ineq",
+  "expr": "5-3x>11",
+  "traps": [
+   [
+    "x>-2",
+    "מחלקים ב-<span class=\"m\" dir=\"ltr\">−3</span>, מספר שלילי: הסימן מתהפך."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hi4",
+  "a": "x≤-5",
+  "form": "ineq",
+  "expr": "3(x-2)≥5x+4",
+  "traps": [
+   [
+    "x≥-5",
+    "מחלקים ב-<span class=\"m\" dir=\"ltr\">−2</span>, מספר שלילי: הסימן מתהפך."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
   "out": ""
  },
  {
@@ -588,24 +906,140 @@
   "out": ""
  },
  {
+  "kind": "sorter",
+  "id": "hw-sort-w",
+  "rows": [
+   " ≤ ",
+   " ≥ ",
+   " < ",
+   " > ",
+   " ≤ ",
+   " ≥ "
+  ]
+ },
+ {
   "kind": "try",
-  "id": "t-d1",
-  "a": "1",
-  "form": "num",
-  "expr": "((x)/(x-2))-((1)/(4))=((5)/(4x-8))",
-  "traps": [],
+  "id": "t-w1",
+  "a": "x+7",
+  "form": "exp",
+  "expr": "x",
+  "traps": [
+   [
+    "7x",
+    "״עוד <span class=\"n\">7</span>״ הוא חיבור. ״פי <span class=\"n\">7</span>״ היה כפל."
+   ]
+  ],
+  "nsteps": 1,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-w2",
+  "a": "8x+50",
+  "form": "exp",
+  "expr": "x",
+  "traps": [
+   [
+    "50x+8",
+    "<span class=\"m\" dir=\"ltr\"><i>x</i></span> ש״ח לכל אחת מ-<span class=\"n\">8</span> השעות: <span class=\"m\" dir=\"ltr\">8<i>x</i></span>. ה-<span class=\"n\">50</span> קבועים."
+   ],
+   [
+    "8x",
+    "חסרים <span class=\"n\">50</span> ש״ח דמי הנסיעה."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-w3",
+  "a": "0.8x",
+  "form": "exp",
+  "expr": "x",
+  "traps": [
+   [
+    "x-20",
+    "ההנחה היא <span class=\"n\">20%</span> מהמחיר, כלומר <span class=\"m\" dir=\"ltr\">0.2<i>x</i></span>, ולא <span class=\"n\">20</span> ש״ח."
+   ],
+   [
+    "0.2x",
+    "זו ההנחה עצמה. המחיר אחריה הוא <span class=\"m\" dir=\"ltr\"><i>x</i> − 0.2<i>x</i> = 0.8<i>x</i></span>."
+   ]
+  ],
   "nsteps": 3,
   "nhints": 1,
   "out": ""
  },
  {
   "kind": "try",
-  "id": "t-d2",
-  "a": "-1/3",
+  "id": "t-w4",
+  "a": "12x-30",
+  "form": "exp",
+  "expr": "x",
+  "traps": [
+   [
+    "12(x-30)",
+    "ההנחה של <span class=\"n\">30</span> ש״ח היא על כל ההזמנה, ולא על כל כרטיס."
+   ],
+   [
+    "12x+30",
+    "הנחה מורידים: <span class=\"m\" dir=\"ltr\">12<i>x</i> − 30</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "hw-1-t",
+  "a": "80",
   "form": "num",
-  "expr": "((x)/(x-3))+((1)/(x(x-3)))=1",
-  "traps": [],
-  "nsteps": 4,
+  "expr": "2000+120x=11600",
+  "traps": [
+   [
+    "11600/120",
+    "קודם מורידים את הסכום הקבוע: <span class=\"m\" dir=\"ltr\">11600 − 2000</span>. רק אז מחלקים ב-<span class=\"n\">120</span>."
+   ],
+   [
+    "13600/120",
+    "הסכום הקבוע עובר אגף ומחליף סימן: מחסירים <span class=\"n\">2,000</span>, ולא מוסיפים."
+   ]
+  ],
+  "nsteps": 8,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try2",
+  "id": "t-w6",
+  "a": {
+   "x": "90",
+   "y": "60"
+  },
+  "nsteps": 9,
+  "nhints": 2
+ },
+ {
+  "kind": "try",
+  "id": "hw-3-t",
+  "a": "x≥130",
+  "form": "ineq",
+  "expr": "45x+300≥6150",
+  "traps": [
+   [
+    "x≤130",
+    "״לפחות״ פירושו גדול או שווה: <span class=\"m\" dir=\"ltr\"><i>x</i> ≥ 130</span>."
+   ],
+   [
+    "x≥6450/45",
+    "כש-<span class=\"n\">300</span> עובר לצד השני הוא מחליף סימן: <span class=\"m\" dir=\"ltr\">6150 − 300</span>."
+   ]
+  ],
+  "nsteps": 8,
   "nhints": 2,
   "out": ""
  }
