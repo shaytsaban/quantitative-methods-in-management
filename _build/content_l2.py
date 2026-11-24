@@ -1,14 +1,14 @@
 # Meeting 2, in deck order. Run through build_deck.py 2 / build_summary.py 2.
 LMETA = dict(date='', h1=('משוואות, אחוזים', 'ואי שוויונים'), title='משוואות, מערכות משוואות, אחוזים ואי שוויונים',
              sub='משוואה ממעלה ראשונה, משוואה עם שברים, מערכת של שתי משוואות, אחוזים ואי שוויונים. כל נושא נפתח בסיפור ניהולי, ומגיע לכלל רק אחרי הדוגמה.',
-             cover='חזרה על מפגש 1; משוואה ממעלה ראשונה עם נעלם אחד; משוואות עם שברים; מערכת של שתי משוואות עם שני נעלמים, בשיטת ההצבה ובשיטת השוואת המקדמים; אחוזים, מקדם שינוי ושיעור שינוי; אי שוויונים; תרגילים מסכמים ותרגול עצמי, כולל העשרה על נעלם במכנה.',
+             cover='חזרה על מפגש 1; משוואה ממעלה ראשונה עם נעלם אחד; משוואות עם שברים, כולל נעלם במכנה; מערכת של שתי משוואות עם שני נעלמים, בשיטת ההצבה ובשיטת השוואת המקדמים; אחוזים, מקדם שינוי ושיעור שינוי; אי שוויונים; תרגילים מסכמים ותרגול עצמי.',
              next_h='פונקציות, והפונקציה הלינארית', next_t='מהי פונקציה, תחום וטווח; הקו הישר, השיפוע שלו והשרטוט שלו; ישרים מקבילים ומאונכים; ונקודת החיתוך של שני ישרים, שהיא בדיוק הפתרון של מערכת משוואות מהמפגש הזה.')
 TOTAL_PARTS = 6
 for _f in ('content_l2a.py', 'content_l2b.py', 'content_l2c.py'):
     exec(R(_f))
 
 # Practice beyond the class route moves, as it is, to the home section at the end (Shay, 2026-11-19: do not stretch the slides).
-HOME = ['h-e', 'h-f', 'h-m', 'h-m2', 'h-p', 'h-i', 'd-domain', 'd-work', 'd-try']
+HOME = ['h-e', 'h-f', 'h-m', 'h-m2', 'h-p', 'h-i']
 _by = {x['id']: x for x in SL}
 assert all(k in _by for k in HOME)
 SL[:] = [x for x in SL if x['id'] not in HOME]
@@ -16,7 +16,16 @@ _at = next(i for i, x in enumerate(SL) if x['id'] == 's-home') + 1
 for _j, _k in enumerate(HOME):
     _x = _by[_k]
     _x['part'] = 6
-    _x['kick'] = 'חלק 6 · ' + ('העשרה' if _k.startswith('d-') else 'תרגול עצמי לבית')
+    _x['kick'] = 'חלק 6 · תרגול עצמי לבית'
+    SL.insert(_at + _j, _x)
+
+# x in the denominator: taught in class at the end of part 2 (Shay, 2026-11-24, after meeting 1 was completed in full).
+_dm = [x for x in SL if x['id'] in ('d-domain', 'd-work', 'd-try')]
+SL[:] = [x for x in SL if x['id'] not in ('d-domain', 'd-work', 'd-try')]
+_at = next(i for i, x in enumerate(SL) if x['id'] == 'f-try') + 1
+for _j, _x in enumerate(_dm):
+    _x['part'] = 2
+    _x['kick'] = 'חלק 2 · נעלם במכנה'
     SL.insert(_at + _j, _x)
 
 # The purpose of every slide, shown beside the part label (Shay, 2026-11-19: whatever is done in the deck must say what it serves).
@@ -34,7 +43,7 @@ GOAL = {
  's-rules': 'כל הכללים במקום אחד, לחזרה ולתרגול', 's-split': 'לדעת מה עושים עכשיו, ומה בבית', 'x-1': 'לבדוק לבד: משוואה מסיפור', 'x-2': 'לבדוק לבד: מערכת מסיפור',
  'x-3': 'לבדוק לבד: שינויים באחוזים', 'x-4': 'לבדוק לבד: אי שוויון מסיפור', 's-home': 'לדעת איך לתרגל לבד',
  'h-e': 'תרגול נוסף: משוואות', 'h-f': 'תרגול נוסף: שלושה מכנים', 'h-m': 'תרגול נוסף: מערכות', 'h-m2': 'תרגול נוסף: מערכות עם שברים', 'h-p': 'תרגול נוסף: אחוזים', 'h-i': 'תרגול נוסף: אי שוויון עם פישוט',
- 'd-domain': 'העשרה: למה אסור לחלק באפס, ומה זה עושה למשוואה', 'd-work': 'העשרה: לפתור משוואה שהנעלם שלה במכנה', 'd-try': 'העשרה: לתרגל נעלם במכנה'}
+ 'd-domain': 'להבין למה אסור לחלק באפס, ומה זה עושה למשוואה', 'd-work': 'לפתור משוואה שהנעלם שלה במכנה', 'd-try': 'לפתור לבד משוואות שהנעלם שלהן במכנה'}
 for _s in SL:
     if _s['kind'] == 'opener': continue
     _s['goal'] = 'לעצור, ולוודא שהעיקר ברור לפני שממשיכים' if _s['id'].startswith('s-sum') else GOAL[_s['id']]
