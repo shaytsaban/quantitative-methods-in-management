@@ -70,5 +70,5 @@ print('slides', html.count('<section class="slide'), 'activities', NACT[0], 'try
 print('classes without a rule:', missing)
 
 os.makedirs(os.path.join(H, 'tests'), exist_ok=True)
-json.dump(MAN, open(os.path.join(H, 'tests', 'manifest.json'), 'w', encoding='utf8'), ensure_ascii=False, indent=1)
+json.dump(MAN, open(os.path.join(H, 'tests', f'manifest-{LESSON}.json'), 'w', encoding='utf8'), ensure_ascii=False, indent=1)
 print('manifest', len(MAN))

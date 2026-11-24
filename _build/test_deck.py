@@ -2,7 +2,9 @@
 # (right answer accepted, wrong answer rejected), direction of every math run, forbidden characters.
 import json, os, re, subprocess, sys, tempfile, html as hh
 H = os.path.dirname(os.path.abspath(__file__))
-SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html')
+ARG = sys.argv[1] if len(sys.argv) > 1 else '1'
+SRC = os.path.join(H, '..', 'lectures', f'lecture-{ARG}', 'presentation.html') if ARG.isdigit() else ARG
+LESSON = int(ARG) if ARG.isdigit() else int((re.search(r'lecture-(\d+)', ARG) or re.search(r'(\d+)', os.path.basename(ARG)) or [0, 1])[1])
 CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 TEST = r'''
 window.onerror=(m,u,l,c,e)=>{document.documentElement.setAttribute('data-err',m+' @'+l+':'+c);};
@@ -18,9 +20,9 @@ function measure(s,i,tag){const limit=s.querySelector('.ft')?720-37:716;let wors
 // content wider than its box (clipped or spilling equations and tables)
 function wide(s){s.querySelectorAll('.eq,.opx,.tq,.ctab,.gq,.tbl2,.anat,.mach,.twoway').forEach(e=>{if(e.closest('[hidden]'))return;const box=e.closest('.card,.wkr,.tstep,.rule,.try,.qr,.solw,.col,.slide');const g=document.createRange();g.selectNodeContents(e);const a=g.getBoundingClientRect(),b=box.getBoundingClientRect();if(a.width&&(a.left<b.left-1.5||a.right>b.right+1.5))R.wide.push({id:s.id,t:e.textContent.slice(0,40),over:Math.round(Math.max(b.left-a.left,a.right-b.right))});});}
 // direction by measurement: inside every math run the first character sits left of the last one, and the run is one line
-function bidi(s){s.querySelectorAll('.eq,.m,.n,.opx,.tw-e').forEach(e=>{if(e.closest('[hidden]')||e.closest('.hints'))return;const cs=getComputedStyle(e);if(cs.direction!=='ltr'||!/isolate|plaintext/.test(cs.unicodeBidi)&&cs.display==='inline')R.bidi.push({id:s.id,why:'not an isolated ltr run',t:e.textContent.slice(0,30)});
+function bidi(s){s.querySelectorAll('.eq,.m,.n,.opx,.tw-e,.frac>span').forEach(e=>{if(e.closest('[hidden]')||e.closest('.hints'))return;const cs=getComputedStyle(e);if(cs.direction!=='ltr'||!/isolate|plaintext/.test(cs.unicodeBidi)&&cs.display==='inline')R.bidi.push({id:s.id,why:'not an isolated ltr run',t:e.textContent.slice(0,30)});
  const w=document.createTreeWalker(e,NodeFilter.SHOW_TEXT);const ts=[];let t;while(t=w.nextNode())if(t.nodeValue.trim()&&!t.parentElement.closest('.mh'))ts.push(t);if(ts.length<1)return;
- const pos=[];ts.forEach(t=>{const v=t.nodeValue;for(let j=0;j<v.length;j++){if(!v[j].trim())continue;const g=document.createRange();g.setStart(t,j);g.setEnd(t,j+1);const r=g.getBoundingClientRect();if(r.width)pos.push({x:r.left,y:r.top,c:v[j],sup:!!t.parentElement.closest('sup')});}});
+ const pos=[];const fr=new Set();ts.forEach(t=>{const f=t.parentElement.closest('.frac');if(f&&e.contains(f)&&f!==e&&!e.matches('.frac>span')){if(fr.has(f))return;fr.add(f);const r=f.getBoundingClientRect();pos.push({x:r.left,y:r.top,c:'[frac]',sup:false});return;}const v=t.nodeValue;for(let j=0;j<v.length;j++){if(!v[j].trim())continue;const g=document.createRange();g.setStart(t,j);g.setEnd(t,j+1);const r=g.getBoundingClientRect();if(r.width)pos.push({x:r.left,y:r.top,c:v[j],sup:!!t.parentElement.closest('sup')});}});
  for(let j=1;j<pos.length;j++){if(pos[j].x<pos[j-1].x-0.5&&!(e.classList.contains('eq')&&Math.abs(pos[j].y-pos[j-1].y)>16&&!pos[j].sup&&!pos[j-1].sup)){R.bidi.push({id:s.id,why:'order',t:e.textContent.slice(0,40),at:pos[j-1].c+pos[j].c});break;}}
  if(e.classList.contains('m')||e.classList.contains('n')){const rs=e.getClientRects();if(rs.length>1&&Math.abs(rs[0].top-rs[rs.length-1].top)>14)R.bidi.push({id:s.id,why:'wrapped',t:e.textContent.slice(0,40)});}});
  // a minus or an equals sign loose in Hebrew text (outside an ltr run) would be mirrored
@@ -29,18 +31,29 @@ function small(s){const w=document.createTreeWalker(s,NodeFilter.SHOW_TEXT);let 
 const A=(id,kind,ok,more)=>R.act.push(Object.assign({id,kind,ok:!!ok},more||{}));
 const MAN=__MAN__;const byId={};MAN.forEach(m=>byId[m.id]=m);const plain=e=>e.textContent.replace(/\s+/g,' ').trim();
 function stateOf(b,fb){if(fb.classList.contains('good'))return b.classList.contains('solved')?'ok':'good-but-not-solved';if(fb.classList.contains('half'))return 'half';if(fb.classList.contains('wrong'))return fb.textContent.includes('לא הצלחנו לקרוא')?'bad':'no';return 'empty';}
-async function runTry(b){const m=byId[b.id];if(!m){A(b.id,'try',false,{why:'no manifest entry'});return;}const i=b.querySelector('input.ex'),fb=b.querySelector('.fbbar'),chk=b.querySelector('.chk');const bad=[];
+async function runTry2(b,m){const ins=[...b.querySelectorAll('input.ex')],fb=b.querySelector('.fbbar'),chk=b.querySelector('.chk');const bad=[];
+ const keys=ins.map(i=>i.dataset.v);if(keys.join()!==Object.keys(m.a).join())bad.push({why:'boxes',keys});
+ ins.forEach(i=>{if(i.dataset.a!==m.a[i.dataset.v])bad.push({why:'data-a differs',v:i.dataset.v});});
+ m.cases.forEach(([vals,exp,what],k)=>{ins.forEach(i=>{i.value=vals[i.dataset.v];i.dispatchEvent(new Event('input',{bubbles:true}));});
+  if(k%2)ins[ins.length-1].dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));else chk.click();const got=stateOf(b,fb);
+  if(exp.startsWith('trap:')){if(got!=='no'||!plain(fb).includes(exp.slice(5)))bad.push({vals,exp,got,fb:plain(fb).slice(0,70)});}else if(got!==exp)bad.push({vals,exp,got,what,fb:plain(fb).slice(0,70)});});
+ const nh=b.querySelectorAll('.hints>div').length;if(nh!==m.nhints)bad.push({why:'hints'});if(nh){b.querySelector('.hintb').click();if(!plain(fb).includes('רמז 1'))bad.push({why:'hint not shown'});}
+ const ns=b.querySelectorAll('.tsol .tstep').length;if(ns!==m.nsteps||!ns)bad.push({why:'steps',ns});
+ b.querySelector('.solb').click();const pop=document.getElementById('moreov');const nx=pop.querySelector('.nxs');for(let k=1;k<ns;k++)nx.click();if(pop.querySelectorAll('.tstep.show').length!==ns)bad.push({why:'popup stages'});pop.classList.remove('open');
+ ins.forEach(i=>{i.value=m.a[i.dataset.v];});chk.click();if(stateOf(b,fb)!=='ok')bad.push({why:'final answer'});
+ A(b.id,'try2',!bad.length,{cases:m.cases.length,bad});}
+async function runTry(b){const m=byId[b.id];if(m&&m.kind==='try2')return runTry2(b,m);if(!m){A(b.id,'try',false,{why:'no manifest entry'});return;}const i=b.querySelector('input.ex'),fb=b.querySelector('.fbbar'),chk=b.querySelector('.chk');const bad=[];
  if(b.dataset.a!==m.a)bad.push({why:'data-a differs',dom:b.dataset.a,man:m.a});
  m.cases.forEach(([v,exp,what],k)=>{i.value=v;i.dispatchEvent(new Event('input',{bubbles:true}));if(k%2)i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));else chk.click();let got=stateOf(b,fb);
-  if(exp.startsWith('trap:')){if(got!=='no'||!plain(fb).includes(exp.slice(5).replace(/\s+/g,' ').trim()))bad.push({v,exp,got,fb:plain(fb).slice(0,60)});}
+  if(exp.startsWith('trap:')){if(got!=='no'||!plain(fb).includes(exp.slice(5).replace(/\s+/g,' ').trim()))bad.push({v,exp,got,fb:plain(fb).slice(0,60),what});}
   else if(got!==exp)bad.push({v,exp,got,what});});
  const hb=b.querySelector('.hintb'),nh=b.querySelectorAll('.hints>div').length;if(nh!==m.nhints)bad.push({why:'hints',nh});if(nh){hb.click();if(!fb.classList.contains('half')||!plain(fb).includes('רמז 1'))bad.push({why:'hint not shown'});}
  const ns=b.querySelectorAll('.tsol .tstep').length;if(ns!==m.nsteps||!ns)bad.push({why:'steps',ns,man:m.nsteps});
  if(b.classList.contains('big')){const sb=b.querySelector('.solb');sb.click();if(b.querySelectorAll('.tsol .tstep.show').length!==1)bad.push({why:'first stage'});for(let k=1;k<ns;k++)sb.click();if(b.querySelectorAll('.tsol .tstep.show').length!==ns||!sb.disabled)bad.push({why:'stages'});}
  else{b.querySelector('.solb').click();const pop=document.getElementById('moreov');const nx=pop.querySelector('.nxs');if(!pop.classList.contains('open')||pop.querySelectorAll('.tstep.show').length!==1)bad.push({why:'popup first stage'});for(let k=1;k<ns;k++)nx.click();if(pop.querySelectorAll('.tstep.show').length!==ns)bad.push({why:'popup stages'});const r=pop.querySelector('.more-box').getBoundingClientRect();if(r.bottom>innerHeight||r.top<0)bad.push({why:'popup outside the screen'});pop.classList.remove('open');}
  // keypad: appears on focus and writes into the box
- i.value='';i.focus();const kp=document.querySelector('.kp');const kb=kp&&kp.querySelector('button');if(!kp||getComputedStyle(kp).display==='none'||!kb)bad.push({why:'keypad missing'});else{kb.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));if(i.value!==kb.dataset.k)bad.push({why:'keypad did not type',v:i.value});}
- i.focus();i.value='7x+123';chk.click();await new Promise(r=>setTimeout(r,0));{const kr=document.querySelector('.kp').getBoundingClientRect(),fr=fb.getBoundingClientRect(),ir=i.getBoundingClientRect();const hit=(p,q)=>!(p.right<=q.left||q.right<=p.left||p.bottom<=q.top||q.bottom<=p.top);if(hit(kr,fr)||hit(kr,ir))bad.push({why:'keypad covers the feedback or the answer box'});if(kr.bottom>innerHeight||kr.top<0)bad.push({why:'keypad outside the screen'});}
+ i.value='';i.focus();if(!document.hasFocus())i.dispatchEvent(new FocusEvent('focusin',{bubbles:true}));const kp=document.querySelector('.kp');const kb=kp&&kp.querySelector('button');if(!kp||getComputedStyle(kp).display==='none'||!kb)bad.push({why:'keypad missing'});else{kb.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));if(i.value!==kb.dataset.k)bad.push({why:'keypad did not type',v:i.value});}
+ i.focus();if(!document.hasFocus())i.dispatchEvent(new FocusEvent('focusin',{bubbles:true}));i.value='7x+123';chk.click();await new Promise(r=>setTimeout(r,0));{const kr=document.querySelector('.kp').getBoundingClientRect(),fr=fb.getBoundingClientRect(),ir=i.getBoundingClientRect();const hit=(p,q)=>!(p.right<=q.left||q.right<=p.left||p.bottom<=q.top||q.bottom<=p.top);if(hit(kr,fr)||hit(kr,ir))bad.push({why:'keypad covers the feedback or the answer box'});if(kr.bottom>innerHeight||kr.top<0)bad.push({why:'keypad outside the screen'});}
  i.value=m.a;i.dispatchEvent(new Event('input',{bubbles:true}));chk.click();if(stateOf(b,fb)!=='ok')bad.push({why:'final answer'});
  A(b.id,'try',!bad.length,{cases:m.cases.length,bad});}
 async function solve(s){
@@ -75,7 +88,8 @@ document.documentElement.setAttribute('data-test',JSON.stringify(R));
 
 sys.path.insert(0, H)
 from qlib import same, ev, strip
-MANI = json.load(open(os.path.join(H, 'tests', 'manifest.json'), encoding='utf8'))
+MANI = json.load(open(os.path.join(H, 'tests', f'manifest-{LESSON}.json'), encoding='utf8'))
+FLIP = {'<': '>', '>': '<', '≤': '≥', '≥': '≤'}
 def _terms(a):
     out, d, cur = [], 0, ''
     for i, c in enumerate(a):
@@ -85,8 +99,24 @@ def _terms(a):
             out.append(cur); cur = c
         else: cur += c
     out.append(cur); return out
+def cases_ineq(m):
+    a = m['a']
+    mm = re.fullmatch(r'([a-z])(<|>|≤|≥)(.+)', a); v, op, b = mm.groups()
+    other = {'<': '≤', '≤': '<', '>': '≥', '≥': '>'}[op]
+    cs = [(a, 'ok', 'the answer'), (f' {v} {op} {b} ', 'ok', 'with spaces'), (f'{b}{FLIP[op]}{v}', 'ok', 'written from the other side'),
+          (f'{v}{FLIP[op]}{b}', 'trap:המספר נכון, אבל הכיוון', 'direction flipped'), (f'{v}{other}{b}', 'trap:המספר והכיוון נכו', 'strict and non strict'),
+          (f'{v}{op}({b})+1', 'no', 'wrong bound'), (b, 'half', 'only the number'), ('', 'empty', 'empty'), (f'{v}{op}', 'bad', 'unreadable'),
+          ('w' + op + b, 'half', 'another letter'), (f'{v}{op}({b})+0', 'half', 'bound still an exercise')]
+    if op in '≤≥': cs.append((f'{v}{op.replace("≤", "<=").replace("≥", ">=")}{b}', 'ok', 'typed as <= or >='))
+    tv = {x for x, _ in m['traps']}
+    cs = [c for c in cs if c[0] not in tv]
+    for x, msg in m['traps']: cs.append((x, 'trap:' + re.sub('<[^>]+>', '', msg)[:14], 'trap'))
+    return cs
+
+
 def cases(m):
     a, f = m['a'], m['form']
+    if f == 'ineq': return cases_ineq(m)
     cs = [(a, 'ok', 'the answer'), (a.replace('-', '−').replace('*', '·'), 'ok', 'typographic minus and dot'), (' ' + a.replace('+', ' + ') + ' ', 'ok', 'with spaces'), (a.upper() if f != 'fac' or 'e' not in a else a, 'ok', 'capital letters')]
     t = _terms(a)
     if len(t) > 1 and f == 'exp':
@@ -97,7 +127,12 @@ def cases(m):
     if abs(ev(a)) > 1e-9: cs.append((f'-({a})', 'no', 'opposite sign'))
     if f == 'exp' and len(t) >= 1: cs.append((f'({a})', 'half', 'answer inside brackets'))
     if f == 'exp' and re.search('[a-z]', a): cs.append((a + '+x-x', 'half', 'not collected'))
-    if f == 'num': cs.append((f'{a}+0', 'half', 'still an exercise'))
+    if f == 'num':
+        cs.append((f'{a}+0', 'half', 'still an exercise'))
+        vs = sorted(set(re.findall('[a-z]', m['expr'])) - {'e'})
+        if len(vs) == 1 and re.search('[=<>]', m['expr']): cs.append((f'{vs[0]} = {a}', 'ok', 'written as x = answer'))
+        if '/' in a: cs += [(repr(round(ev(a), 9)), 'ok', 'decimal with nine digits'), (repr(round(ev(a), 2)), 'no', 'decimal rounded to two digits')]
+        if abs(ev(a)) >= 1000 and float(ev(a)).is_integer(): cs.append((f'{int(ev(a)):,}', 'ok', 'thousands comma'))
     e = m['expr']
     if e and e != a:
         try: eq = same(e, a)
@@ -105,8 +140,19 @@ def cases(m):
         if eq: cs.append((e, 'half', 'the question itself typed back'))
     for x, msg in m['traps']: cs.append((x, 'trap:' + re.sub('<[^>]+>', '', msg)[:14], 'trap'))
     return cs
+def cases_xy(m):
+    a = m['a']; ks = list(a)
+    cs = [(dict(a), 'ok', 'the answer'), ({k: f'{k}={v}' for k, v in a.items()}, 'ok', 'written as x = value'), ({k: '' for k in ks}, 'empty', 'both empty'),
+          ({ks[0]: a[ks[0]], ks[1]: ''}, 'half', 'second empty'), ({ks[0]: a[ks[0]], ks[1]: f'({a[ks[1]]})+1'}, 'trap:הערך של', 'second wrong'),
+          ({ks[0]: f'({a[ks[0]]})+1', ks[1]: a[ks[1]]}, 'trap:הערך של', 'first wrong'), ({ks[0]: '(', ks[1]: a[ks[1]]}, 'bad', 'unreadable'),
+          ({ks[0]: f'{ks[1]}={a[ks[1]]}', ks[1]: a[ks[1]]}, 'trap:כתבתם ערך של', 'value of the other unknown')]
+    if abs(ev(a[ks[0]]) - ev(a[ks[1]])) > 1e-9: cs.append(({ks[0]: a[ks[1]], ks[1]: a[ks[0]]}, 'trap:החלפתם', 'swapped'))
+    return cs
+
+
 for m in MANI:
     if m['kind'] == 'try': m['cases'] = cases(m)
+    if m['kind'] == 'try2': m['cases'] = cases_xy(m)
 src = open(SRC, encoding='utf8').read()
 i = src.rindex('})();\n</script>')
 out = src[:i] + 'window.__deck=window.__deck;\n' + '})();\n</script>\n<script>' + TEST.replace('__MAN__', json.dumps(MANI, ensure_ascii=False).replace('</', '<\\/')) + '</script>' + src[i + len('})();\n</script>'):]
@@ -125,5 +171,5 @@ print('counts', R['counts']); print('walk', R['walk'])
 for k in ('overflow', 'wide', 'bidi', 'chars', 'reveal', 'small'):
     print(f'{k}: {len(R[k])}')
     for x in R[k][:40]: print('   ', json.dumps(x, ensure_ascii=False))
-print('activities', len(R['act']), 'of', len(MANI) - sum(m['kind'] == 'mc' for m in MANI), 'in the manifest; typed cases', sum(a.get('cases', 0) for a in R['act']), '; failed', len(bad_act)); [print('   ', json.dumps(a, ensure_ascii=False)[:900]) for a in bad_act[:40]]
+print('lesson', LESSON, 'activities', len(R['act']), 'of', len(MANI) - sum(m['kind'] == 'mc' for m in MANI), 'in the manifest; typed cases', sum(a.get('cases', 0) for a in R['act']), '; failed', len(bad_act)); [print('   ', json.dumps(a, ensure_ascii=False)[:900]) for a in bad_act[:40]]
 print('mc', len(R['mc']), 'failed', len(bad_mc))

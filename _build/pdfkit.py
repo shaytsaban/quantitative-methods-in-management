@@ -40,7 +40,13 @@ def to_pdf(page, out, budget=8000):
     for f in ('david.ttf', 'davidbd.ttf'): shutil.copy(os.path.join(FONTS, f), d)
     p = os.path.join(d, 'p.html'); open(p, 'w', encoding='utf8').write(page)
     out = os.path.abspath(out); os.makedirs(os.path.dirname(out), exist_ok=True)
-    subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={d}/p', '--no-pdf-header-footer', f'--virtual-time-budget={budget}', f'--print-to-pdf={out}', 'file://' + p], capture_output=True, timeout=180)
+    for k in range(3):
+        try:
+            subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={d}/p{k}', '--no-pdf-header-footer', f'--virtual-time-budget={budget}', f'--print-to-pdf={out}', 'file://' + p], capture_output=True, timeout=240)
+            if os.path.exists(out) and os.path.getmtime(out) >= os.path.getmtime(p): break
+        except subprocess.TimeoutExpired:
+            subprocess.run(['pkill', '-f', f'{d}/p{k}'], capture_output=True)   # only this print job's own Chrome
+            print('  print timed out, retrying', k + 1)
     shutil.rmtree(d, True)
     import fitz
     doc = fitz.open(out); txt = ''.join(pg.get_text() for pg in doc)

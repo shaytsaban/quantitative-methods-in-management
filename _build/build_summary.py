@@ -52,6 +52,15 @@ table.tbl2{width:100%;margin:1mm 0 2mm;font-size:11pt}.tbl2 th{background:var(--
 .gl{border-right:1mm solid var(--coral);padding:.6mm 2.2mm;margin:0 0 1.6mm;break-inside:avoid;font-size:10.8pt;line-height:1.25}
 .gl .th{font-weight:700;color:var(--navy);font-size:11.6pt}.gl small{color:var(--mut);direction:ltr;unicode-bidi:isolate;margin-right:1.5mm;font-size:9.8pt}.gl p{margin:0 0 .3mm}
 .glc{columns:2;column-gap:5mm}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .6mm;font-size:.9em}.frac>span{padding:0 1.2mm;white-space:nowrap}.frac>span:first-child{border-bottom:.3mm solid currentColor}
+.sys{direction:ltr;unicode-bidi:isolate;border-left:.8mm solid var(--navy);padding:0 3mm;margin:1mm auto;width:max-content;font-weight:700;font-size:12.4pt}.sys .sysl{display:block}
+.balg{display:grid;grid-template-columns:1fr 1fr;gap:2mm}.balc{border:.25mm solid var(--line);border-radius:1.6mm;padding:1mm 2mm;break-inside:avoid}.balw svg{width:100%;max-height:30mm;direction:ltr}
+.pct{display:grid;grid-template-columns:42mm 1fr;gap:3mm;align-items:center}.pct svg{width:40mm;height:40mm}
+.fmla{background:#eef2ff;border:.3mm solid var(--navy);border-radius:1.6mm;padding:1.2mm 2.4mm;margin:1.2mm 0;break-inside:avoid;text-align:center}.fmla .eq{text-align:center}
+.icons{direction:ltr;display:flex;gap:1.5mm;justify-content:center;align-items:center;font-weight:700}.icons svg{width:8mm;height:8mm}
+svg.nl{width:100mm;max-width:100%;height:auto;display:block;margin:1mm auto;direction:ltr;font-family:"David"}svg.pbar{width:100mm;display:block;margin:1mm auto;direction:ltr}
+.xin{direction:ltr}.tsl .m{white-space:normal}
+
 .goal{color:#087469;font-size:10.8pt;margin:-.4mm 0 1mm}
 '''
 parts = {}

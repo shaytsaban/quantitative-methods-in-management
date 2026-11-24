@@ -7,9 +7,18 @@ exec(open(os.path.join(H, 'plan.py'), encoding='utf8').read())
 _ns = {}; exec(open(os.path.join(H, 'booklet.py'), encoding='utf8').read(), _ns)
 NB = len(_ns['EX'])
 n = lambda s: f'<span class="n">{s}</span>'
-D = open(os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html'), encoding='utf8').read()
-NS, NT = D.count('<section class="slide'), D.count('class="act try')
-BUILT = {1}
+LEC = {
+ 1: dict(title='ריענון באלגברה: מיומנויות אלגבריות', learn=['חזקה, סימנים בכפל, וסדר פעולות החשבון', 'משתנה, ביטוי אלגברי, איבר ומקדם; הצבה של מספר בביטוי', 'כינוס איברים דומים', 'שלושת חוקי החזקות',
+         'פתיחת סוגריים, מינוס לפני סוגריים, ופישוט ביטויים', 'שלוש נוסחאות הכפל המקוצר', 'הוצאת גורם משותף ופירוק לגורמים', 'תרגילים מסכמים, ותרגול עצמי לבית לפי נושאים']),
+ 2: dict(title='משוואות, מערכות משוואות, אחוזים ואי שוויונים', learn=['חזרה קצרה על הכלים של מפגש 1', 'משוואה ממעלה ראשונה עם נעלם אחד: המאזניים, העברת אגף ובדיקה בהצבה', 'משוואות עם שברים: כפל במכנה המשותף',
+         'מערכת של שתי משוואות: שיטת ההצבה ושיטת השוואת המקדמים', 'אחוזים: אחוז מסכום, מקדם שינוי, שינויים ברצף ושיעור שינוי', 'אי שוויונים: פתרון, ציר המספרים, והיפוך הסימן בכפל במספר שלילי',
+         'תרגילים מסכמים מסיפורים ניהוליים, ותרגול עצמי לבית', 'העשרה: נעלם במכנה ותחום הגדרה'])}
+BUILT = set(LEC)
+for _k, _v in LEC.items():
+    _d = open(os.path.join(H, '..', 'lectures', f'lecture-{_k}', 'presentation.html'), encoding='utf8').read()
+    _v['ns'], _v['nt'] = _d.count('<section class="slide'), _d.count('class="act try')
+    _v['nb'] = sum(1 for e in _ns['EX'] if _ns['TOPICS'][e[1]][0] == _k)
+NS, NT = LEC[1]['ns'], LEC[1]['nt']
 REC = {}     # meeting -> YouTube id
 css = open(os.path.join(H, 'shell', 'hub.css'), encoding='utf8').read() + '''
 .hero h1{font-size:clamp(38px,7vw,64px)}.hero .h1s{font-size:clamp(20px,3vw,28px);font-weight:700;color:#7fe3d6;margin-top:6px;line-height:1.25}
@@ -50,6 +59,41 @@ def rec(i, big=False):
     return f'<div class="recsm" id="rec-{i}"><span class="play">&#9654;</span><span><b>הקלטת מפגש {n(i)}</b>תועלה לאחר המפגש</span></div>'
 
 
+def lec_card(i):
+    L = LEC[i]
+    li = ''.join(f'<li>{x}</li>' for x in L['learn'])
+    nb = L['nb']
+    nxt = f' מה שלא הספקנו בכיתה ממשיך במפגש {n(i + 1)}.' if i < 13 else ''
+    return f'''<article class="lec" id="lesson-{i}">
+<div class="lec-head"><div class="lec-n">{i}</div><div><h3>{L['title']}</h3><div class="sub">מפגש {n(i)}</div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים במפגש</h4><ul class="learn">{li}</ul>
+<div class="rec1" id="rec-{i}"><h4>הקלטת המפגש</h4>{rec(i, True)}</div>
+</div>
+<div><h4>חומרי המפגש</h4>
+<div class="grp"><h5>1. במפגש</h5><div class="links">
+<a class="lk p" href="lectures/lecture-{i}/presentation.html"><span class="e">🖥️</span><span><b>מצגת המפגש</b><span class="d">{n(L['ns'])} שקפים. כל פתרון נחשף שלב אחר שלב, ו-{n(L['nt'])} תרגילים עם בדיקה מיידית, רמזים ופתרון בשלבים.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי המפגש, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-{i}/summary.pdf" target="_blank" rel="noopener"><span class="e">📄</span><span><b>סיכום המפגש (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, דוגמאות, כללים, תרגילים עם פתרונות, ומילון מושגים.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk p" href="lectures/lecture-{i}/presentation.html#s-home"><span class="e">✍️</span><span><b>תרגול עצמי לבית, בתוך המצגת</b><span class="d">השקפים האחרונים של המצגת, לפי נושאים, עם בדיקה, רמזים ופתרון בשלבים.</span></span></a>
+<a class="lk s" href="materials/booklet-m{i}.pdf" target="_blank" rel="noopener"><span class="e">📘</span><span><b>חוברת התרגילים: מפגש {i}</b><span class="d">תרגילים {n(f'{i}-1')} עד {n(f'{i}-{nb}')}, מהקל אל הקשה, עם תשובות סופיות בסוף.</span></span></a>
+<a class="lk r" href="materials/booklet-m{i}-solutions.pdf" target="_blank" rel="noopener"><span class="e">✅</span><span><b>פתרונות החוברת: מפגש {i} (PDF)</b><span class="d">פתרון מלא בשלבים לכל תרגיל.</span></span></a>
+</div></div>
+</div>
+</div>
+<div class="todo"><h4>📝 מה עושים במפגש {n(i)}</h4><ol>
+<li><b>במפגש:</b> עובדים יחד במצגת, ופותרים את הפעילויות שבתוך השקפים.</li>
+<li><b>אחרי המפגש:</b> קוראים את הסיכום, ופותרים את שקפי ״תרגול עצמי לבית״ שבסוף המצגת.{nxt}</li>
+<li><b>מהחוברת:</b> תרגילים {n(f'{i}-1')} עד {n(f'{i}-{nb}')}, על דף. בודקים מול התשובות הסופיות, ורק אחר כך פותחים את הפתרונות המלאים.</li>
+</ol></div>
+</article>'''
+
+
+built = '\n'.join(lec_card(i) for i in sorted(BUILT, reverse=True))
+
 ups = ''.join(f'''<article class="lec up" id="lesson-{i}"><div class="lec-head"><div class="lec-n">{i}</div><div><h3>{t}</h3><div class="sub">מפגש {n(i)}</div></div></div>
 <div class="upb"><div><p>{d}</p><p class="soon">המצגת, הסיכום והתרגילים יעלו לאתר לקראת המפגש.</p></div>{rec(i)}</div></article>''' for i, t, d, k in PLAN if i not in BUILT)
 html = f'''<!doctype html>
@@ -82,8 +126,8 @@ html = f'''<!doctype html>
 <h2 class="sec">קובצי הקורס</h2>
 <div class="cgrid">
 {lk('s', 'materials/syllabus.pdf', '📋', 'סילבוס הקורס (PDF)', f'תיאור הקורס, תוצרי הלמידה, תוכנית {n(13)} המפגשים, הרכב הציון ורשימת הקריאה.')}
-{lk('s', 'materials/booklet.pdf', '📘', 'חוברת תרגילים (PDF)', f'תרגילים לפי מפגשים ונושאים. כרגע: {n(NB)} תרגילים למפגש {n(1)}, עם תשובות סופיות. פרק חדש נוסף אחרי כל מפגש.')}
-{lk('r', 'materials/booklet-solutions.pdf', '✅', 'פתרונות החוברת (PDF)', 'פתרון מלא לכל תרגיל, שלב אחר שלב, עם הסבר לכל שלב. פותחים רק אחרי שמנסים לבד.')}
+{lk('s', 'materials/booklet.pdf', '📘', 'חוברת תרגילים (PDF)', f'כל המפגשים בקובץ אחד, פרק לכל מפגש. כרגע: {n(NB)} תרגילים למפגשים {n(1)} ו-{n(2)}, עם תשובות סופיות. פרק חדש נוסף אחרי כל מפגש.')}
+{lk('r', 'materials/booklet-solutions.pdf', '✅', 'פתרונות החוברת המלאה (PDF)', 'פתרון מלא לכל תרגיל, שלב אחר שלב, עם הסבר לכל שלב. פותחים רק אחרי שמנסים לבד.')}
 </div>
 </section>
 <section class="block" id="plan">
@@ -94,41 +138,7 @@ html = f'''<!doctype html>
 </section>
 <section class="block">
 <h2 class="sec">המפגשים</h2>
-<article class="lec" id="lesson-1">
-<div class="lec-head"><div class="lec-n">1</div><div><h3>ריענון באלגברה: מיומנויות אלגבריות</h3><div class="sub">מפגש {n(1)}</div></div></div>
-<div class="lec-body">
-<div><h4>מה לומדים במפגש</h4><ul class="learn">
-<li>חזקה, סימנים בכפל, וסדר פעולות החשבון</li>
-<li>משתנה, ביטוי אלגברי, איבר ומקדם; הצבה של מספר בביטוי</li>
-<li>כינוס איברים דומים</li>
-<li>שלושת חוקי החזקות</li>
-<li>פתיחת סוגריים, מינוס לפני סוגריים, ופישוט ביטויים</li>
-<li>שלוש נוסחאות הכפל המקוצר</li>
-<li>הוצאת גורם משותף ופירוק לגורמים</li>
-<li>תרגילים מסכמים, ותרגול עצמי לבית לפי נושאים</li>
-</ul>
-<div class="rec1" id="rec-1"><h4>הקלטת המפגש</h4>{rec(1, True)}</div>
-</div>
-<div><h4>חומרי המפגש</h4>
-<div class="grp"><h5>1. במפגש</h5><div class="links">
-<a class="lk p" href="lectures/lecture-1/presentation.html"><span class="e">🖥️</span><span><b>מצגת המפגש</b><span class="d">{n(NS)} שקפים. כל פתרון נחשף שלב אחר שלב, ו-{n(NT)} תרגילים עם בדיקה מיידית, רמזים ופתרון בשלבים.</span></span></a>
-</div></div>
-<div class="grp"><h5>2. אחרי המפגש, לחזרה</h5><div class="links">
-<a class="lk s" href="lectures/lecture-1/summary.pdf" target="_blank" rel="noopener"><span class="e">📄</span><span><b>סיכום המפגש (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, דוגמאות, כללים, תרגילים עם פתרונות, ומילון מושגים.</span></span></a>
-</div></div>
-<div class="grp"><h5>3. תרגול</h5><div class="links">
-<a class="lk p" href="lectures/lecture-1/presentation.html#s-home"><span class="e">✍️</span><span><b>תרגול עצמי לבית, בתוך המצגת</b><span class="d">השקפים האחרונים של המצגת, לפי נושאים, עם בדיקה, רמזים ופתרון בשלבים.</span></span></a>
-<a class="lk s" href="materials/booklet.pdf" target="_blank" rel="noopener"><span class="e">📘</span><span><b>חוברת התרגילים: מפגש 1</b><span class="d">תרגילים {n('1-1')} עד {n(f'1-{NB}')}, בשבעה נושאים, מהקל אל הקשה.</span></span></a>
-<a class="lk r" href="materials/booklet-solutions.pdf" target="_blank" rel="noopener"><span class="e">✅</span><span><b>פתרונות החוברת (PDF)</b><span class="d">פתרון מלא בשלבים לכל תרגיל.</span></span></a>
-</div></div>
-</div>
-</div>
-<div class="todo"><h4>📝 מה עושים במפגש {n(1)}</h4><ol>
-<li><b>במפגש:</b> עובדים יחד במצגת, ופותרים את הפעילויות שבתוך השקפים.</li>
-<li><b>אחרי המפגש:</b> קוראים את הסיכום, ופותרים את שקפי ״תרגול עצמי לבית״ שבסוף המצגת. מה שלא הספקנו בכיתה ממשיך במפגש {n(2)}.</li>
-<li><b>מהחוברת:</b> תרגילים {n('1-1')} עד {n(f'1-{NB}')}, על דף. בודקים מול התשובות הסופיות, ורק אחר כך פותחים את הפתרונות המלאים.</li>
-</ol></div>
-</article>
+{built}
 {ups}
 </section>
 <footer>ד״ר שי צבאן · פניות במייל: <a href="mailto:shay.tsaban@gmail.com">shay.tsaban@gmail.com</a>, עם שם המוסד ושם הקורס<br>{CR1} · {CR2}</footer>
@@ -139,4 +149,4 @@ html = f'''<!doctype html>
 for bad in ('—', '־', '–'):
     assert bad not in html, bad
 open(os.path.join(H, '..', 'index.html'), 'w', encoding='utf8').write(html)
-print('hub', len(html), 'slides', NS, 'tries', NT, 'booklet', NB)
+print('hub', len(html), {k: (v['ns'], v['nt'], v['nb']) for k, v in LEC.items()}, 'booklet', NB)

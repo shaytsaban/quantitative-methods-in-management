@@ -1,6 +1,7 @@
 # Lesson content helpers, shared by the deck and the summary. Executed with MODE = 'deck' or 'pdf'.
 # The lesson itself is in content_l<N>*.py. Every worked line is checked numerically while the deck is built (qlib.chain).
 from qlib import *
+from qlib import _holds, _close
 from toons import TOONS
 import json, re, html as _html
 
@@ -86,7 +87,7 @@ def mc(qid, q, opts, why):
     for i, t in enumerate(opts):
         mark = ' correct' if MODE == 'pdf' and i == a else ''
         o += f'<button class="o{mark}" data-i="{i}">{"אבגדה"[i]}. {TX(t)}</button>'
-    MAN.append(dict(kind='mc', id=qid, right=re.sub('<[^>]+>', '', TX(opts[a])), n=len(opts)))
+    MAN.append(dict(kind='mc', id=qid, right=_html.unescape(re.sub('<[^>]+>', '', TX(opts[a]))), n=len(opts)))
     return f'<div class="mc" data-a="{a}" id="{qid}"><div class="q">{TX(q)}</div>{o}<div class="w"><b>הסבר:</b> {TX(why)}</div></div>'
 
 
@@ -123,16 +124,22 @@ def SORTER(aid, title, h, task, options, rows):
 
 
 # ---------------------------------------------------------------- worked solutions and typed answers
-def _line(x, target):
-    """One stage: (math, note). '=...' must equal the target, '~...' is not checked, anything else is checked side against side."""
+def _line(x, target, sol=None):
+    """One stage: (math, note). '~...' is not checked. With sol (an equation, a system or an inequality), every line must keep
+    the solution. Without it, '=...' must equal the target and anything else is checked side against side."""
     m, note = x
     if m.startswith('~'):
         m = m[1:]
-    elif m.startswith('='):
-        chain(m[1:], target); NCHK[0] += 1
     else:
-        chain(m); NCHK[0] += 1
+        step_check(m, target, sol); NCHK[0] += 1
     return m, note
+
+
+def _sol_of(expr, a):
+    """The solution that every line must keep, read from the question and its answer; the question itself is checked too."""
+    sol = solution_of(expr, a)
+    if sol is not None: NCHK[0] += 1
+    return sol
 
 
 def _nterms(a):
@@ -144,12 +151,13 @@ def _nterms(a):
     return n
 
 
-def WORK(sid, tag, title, stem, steps, expr=None, ans=None, tip=None, extra='', size='', layout='', kick=None):
+def WORK(sid, tag, title, stem, steps, expr=None, ans=None, tip=None, extra='', size='', layout='', kick=None, sol=None, show=None):
     """A worked example: the full question beside its solution, one stage per click, the note above each equation.
     expr: the expression of the question, shown large in the question card. ans: the target of every '=' line."""
     target = ans if ans is not None else expr
-    rows = [_line(x, target) for x in steps]
-    stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (EQ(expr) if expr else '')
+    if sol is None and expr and ans is not None: sol = _sol_of(expr, ans)
+    rows = [_line(x, target, sol) for x in steps]
+    stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (show if show is not None else (EQ(expr) if expr else ''))
     if MODE == 'pdf':
         li = ''.join(f'<li>{TX(note)} {MI(m) if m else ""}</li>' for m, note in rows)
         S(sid, title, title, f'<div class="qstem">{stem_html}</div>{extra}<ol class="steps">{li}</ol>' + (BAND('tip', tip) if tip else ''))
@@ -163,45 +171,70 @@ def WORK(sid, tag, title, stem, steps, expr=None, ans=None, tip=None, extra='', 
     S(sid, title, title, body, kick=kick or KICK(tag), cls='qslide')
 
 
+def _form(a, form):
+    if form: return form
+    if REL.search(strip(a)): return 'ineq'
+    return 'exp' if re.search(r'[a-z]', strip(a)) else 'num'
+
+
 def _trydata(a, form, terms, out, nb, traps):
     letters = sorted(set(re.findall(r'[a-z]', strip(a))))
-    if form is None: form = 'exp' if letters else 'num'
-    d = f' data-a="{strip(a)}" data-form="{form}"'
+    form = _form(a, form)
+    d = f' data-a="{_html.escape(strip(a), quote=True)}" data-form="{form}"'
     if form == 'exp': d += f' data-terms="{terms or _nterms(a)}"'
     if out: d += f' data-out="{strip(out)}"'
     if nb: d += f' data-nb="{nb}"'
     if traps:
-        for x, _ in traps: ev(x)
+        for x, _ in traps:
+            if form != 'ineq': ev(x)
         d += ' data-traps="' + _html.escape(json.dumps([[strip(x), TX(m)] for x, m in traps], ensure_ascii=False), quote=True) + '"'
     return d, letters
 
 
-def _trysol(a, steps):
-    rows = [_line(x, a) for x in steps]
+def _trysol(a, steps, sol=None):
+    rows = [_line(x, a, sol) for x in steps]
     h = ''.join(f'<div class="tstep{" fin" if i == len(rows) - 1 else ""}"><div class="wn">{TX(note)}</div>{EQ(m) if m else ""}</div>' for i, (m, note) in enumerate(rows))
     return rows, h
 
 
+def _kp(text, a):
+    """Extra keypad keys: a fraction bar when the question has fractions, relation signs for an inequality."""
+    k = ''
+    if '{f|' in text or '/' in strip(a): k += '/'
+    if REL.search(strip(a)) and not isinstance(a, dict): k += '<>≤≥'
+    return k
+
+
 BTN = '<button class="abtn chk">בדיקה</button><button class="abtn ghost hintb">רמז</button><button class="abtn ghost solb">פתרון בשלבים</button>'
 IDLE = 'הקלידו תשובה ולחצו ״בדיקה״. חזקה כותבים עם הסימן <span class="n">^</span>, למשל <span class="n">x^2</span>.'
+IDLES = {'ineq': 'הקלידו אי שוויון, למשל <span class="n">x&lt;5</span>. קטן או שווה: <span class="n">&lt;=</span>. גדול או שווה: <span class="n">&gt;=</span>.',
+         'eq': 'הקלידו את הפתרון: מספר, או בצורה <span class="n">x=4</span>. שבר כותבים עם <span class="n">/</span>, למשל <span class="n">15/7</span>.',
+         'num': 'הקלידו מספר ולחצו ״בדיקה״.'}
+
+
+def _idle(form, expr):
+    if form == 'ineq': return IDLES['ineq']
+    if form == 'num': return IDLES['eq'] if expr and REL.search(strip(expr)) else IDLES['num']
+    return IDLE
 
 
 def TRY(qid, q, a, hints=(), steps=(), form=None, terms=None, out=None, nb=None, traps=(), w='', num=None, vars_=None):
     """A compact question with a typed answer. The answer is checked as an expression, not as text."""
     d, letters = _trydata(a, form, terms, out, nb, traps)
-    rows, sol = _trysol(a, steps)
+    _qe = re.findall(r'\$([^$]*)\$', q)
+    rows, sol = _trysol(a, steps, _sol_of(_qe[-1] if _qe else '', a))
     vs = vars_ or ''.join(sorted(set(letters) | set(re.findall(r'[a-z]', strip(' '.join(re.findall(r'\$([^$]*)\$', q))))))) or 'x'
     lab = f'<span class="tn">{num}</span>' if num else ''
     _qe = re.findall(r'\$([^$]*)\$', q)
-    MAN.append(dict(kind='try', id=qid, a=strip(a), form=(form or ('exp' if letters else 'num')), expr=(strip(_qe[-1]) if _qe else ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps), nhints=len(hints), out=strip(out) if out else ''))
+    MAN.append(dict(kind='try', id=qid, a=strip(a), form=_form(a, form), expr=(strip(_qe[-1]) if _qe else ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
         li = ' '.join(f'{TX(note)} {MI(m)}.' for m, note in rows)
         return f'<div class="tryp"><p><b>{num + ". " if num else ""}</b>{TX(q)}</p><p class="tsl"><b>פתרון:</b> {li}</p><p><b>תשובה:</b> {MI(a)}</p></div>'
     NACT[0] += 1
     hh = ''.join(f'<div>{TX(x)}</div>' for x in hints)
-    return (f'<div class="act try" id="{qid}"{d} data-vars="{vs}" data-w="{_html.escape(TX(w), quote=True)}"><div class="tq">{lab}<span>{TX(q)}</span></div>'
+    return (f'<div class="act try" id="{qid}"{d} data-vars="{vs}" data-kp="{_kp(q, a)}" data-w="{_html.escape(TX(w), quote=True)}"><div class="tq">{lab}<span>{TX(q)}</span></div>'
             f'<div class="trow"><input class="ex" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="תשובה">{BTN}</div>'
-            f'<div class="fbbar">{IDLE}</div><div class="hints">{hh}</div><div class="tsol" hidden>{sol}</div></div>')
+            f'<div class="fbbar">{_idle(_form(a, form), _qe[-1] if _qe else "")}</div><div class="hints">{hh}</div><div class="tsol" hidden>{sol}</div></div>')
 
 
 def TRYS(sid, title, h, items, intro=None, cols=2, kick='נסו בעצמכם', after=''):
@@ -211,13 +244,13 @@ def TRYS(sid, title, h, items, intro=None, cols=2, kick='נסו בעצמכם', a
     S(sid, title, h, pre + f'<div class="trys c{cols}">' + ''.join(items) + '</div>' + after, kick=KICK(kick))
 
 
-def TRYBIG(sid, tag, title, stem, a, hints=(), steps=(), expr=None, form=None, terms=None, out=None, nb=None, traps=(), w='', tip=None, extra='', vars_=None):
+def TRYBIG(sid, tag, title, stem, a, hints=(), steps=(), expr=None, form=None, terms=None, out=None, nb=None, traps=(), w='', tip=None, extra='', vars_=None, show=None):
     """One exercise on its own slide: the full question and the answer box on the right, the staged solution on the left."""
     d, letters = _trydata(a, form, terms, out, nb, traps)
-    rows, sol = _trysol(a, steps)
-    stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (EQ(expr) if expr else '')
+    rows, sol = _trysol(a, steps, _sol_of(expr, a))
+    stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (show if show is not None else (EQ(expr) if expr else ''))
     vs = vars_ or ''.join(sorted(set(letters) | set(re.findall(r'[a-z]', strip(expr or ''))))) or 'x'
-    MAN.append(dict(kind='try', id=sid + '-t', a=strip(a), form=(form or ('exp' if letters else 'num')), expr=strip(expr or ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps) + (1 if tip else 0), nhints=len(hints), out=strip(out) if out else ''))
+    MAN.append(dict(kind='try', id=sid + '-t', a=strip(a), form=_form(a, form), expr=strip(expr or ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps) + (1 if tip else 0), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
         li = ''.join(f'<li>{TX(note)} {MI(m)}</li>' for m, note in rows)
         S(sid, title, title, f'<div class="qstem">{stem_html}</div>{extra}<ol class="steps">{li}</ol><div class="band ans"><b>תשובה:</b> {MI(a)}</div>' + (BAND('tip', tip) if tip else ''))
@@ -225,9 +258,9 @@ def TRYBIG(sid, tag, title, stem, a, hints=(), steps=(), expr=None, form=None, t
     NACT[0] += 1
     hh = ''.join(f'<div>{TX(x)}</div>' for x in hints)
     tipb = f'<div class="tstep"><div class="wn"><b>טיפ:</b> {TX(tip)}</div></div>' if tip else ''
-    body = (f'<div class="act try big qg" id="{sid}-t"{d} data-vars="{vs}" data-w="{_html.escape(TX(w), quote=True)}"><div class="qr"><div class="card qstem">{stem_html}</div>{extra}'
+    body = (f'<div class="act try big qg" id="{sid}-t"{d} data-vars="{vs}" data-kp="{_kp(" ".join(stem) + (expr or ""), a)}" data-w="{_html.escape(TX(w), quote=True)}"><div class="qr"><div class="card qstem">{stem_html}</div>{extra}'
             f'<div class="trow"><input class="ex" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="תשובה">{BTN}</div>'
-            f'<div class="fbbar">{IDLE}</div><div class="hints">{hh}</div></div>'
+            f'<div class="fbbar">{_idle(_form(a, form), expr)}</div><div class="hints">{hh}</div></div>'
             f'<div class="solw"><div class="tsol" hidden>{sol}{tipb}</div><div class="solph">נסו לפתור לבד. נתקעתם? ״רמז״ נותן כיוון, ו״פתרון בשלבים״ מציג את הדרך, שלב אחד בכל לחיצה.</div></div></div>')
     S(sid, title, title, body, kick=KICK(tag), cls='qslide')
 
@@ -373,9 +406,102 @@ def AREA(rl, cl, cells, n0=1, W=520, H=300, sizes=None, total=None, strike=()):
     return f'<div class="diagw"><svg class="diag" dir="ltr" viewBox="0 0 {W} {H}" role="img">{"".join(p)}</svg></div>'
 
 
+def VEQ(s, cls=''):
+    """A displayed line, checked: an identity (every side equal) or a chain of true numeric relations."""
+    sides, ops = rel_split(s)
+    if all(o == '=' for o in ops):
+        chain(s)
+    else:
+        vals = [ev(x) for x in sides]
+        assert all(_holds(vals[k], o, vals[k + 1]) for k, o in enumerate(ops)), 'false relation: ' + s
+    NCHK[0] += 1
+    return EQ(s, cls)
+
+
 def SUMMARY(sid, title, items, c3=False):
     """What we learned in this part: plain cards."""
     cards = ''.join(f'<div class="lcard"><b>{TX(t)}</b><p>{TX(d)}</p></div>' for t, d in items)
     if MODE == 'pdf':
         S(sid, title, title, '<ul class="pl">' + ''.join(f'<li><b>{TX(t)}:</b> {TX(d)}</li>' for t, d in items) + '</ul>'); return
     S(sid, title, title, f'<div class="learn{" c3" if c3 else ""}">{cards}</div>', kick=KICK('סיכום ביניים'))
+
+
+def TRYXY(qid, q, ans, hints=(), steps=(), w='', num=None, expr=None, show=True):
+    """A system of two equations: one box for each unknown. ans: {'x': '1', 'y': '4'}. expr: the two equations, 'eq1;eq2'."""
+    sol = _sol_of(expr, ans) if expr else None
+    rows, solh = _trysol('', steps, sol)
+    MAN.append(dict(kind='try2', id=qid, a={k: strip(v) for k, v in ans.items()}, nsteps=len(steps), nhints=len(hints)))
+    show = ''.join(f'<span class="sysl">{MI(e)}</span>' for e in (expr or '').split(';')) if expr and show else ''
+    if MODE == 'pdf':
+        li = ' '.join(f'{TX(note)} {MI(m)}.' for m, note in rows if m or note)
+        return f'<div class="tryp"><p><b>{num + ". " if num else ""}</b>{TX(q)}</p>{f"<div class=sys>{show}</div>" if show else ""}<p class="tsl"><b>פתרון:</b> {li}</p><p><b>תשובה:</b> ' + MI('(' + ', '.join(ans) + ') = (' + ', '.join(ans.values()) + ')') + '</p></div>'
+    NACT[0] += 1
+    hh = ''.join(f'<div>{TX(x)}</div>' for x in hints)
+    lab = f'<span class="tn">{num}</span>' if num else ''
+    boxes = ''.join(f'<label class="xin" dir="ltr"><i>{k}</i> =<input class="ex" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" data-a="{strip(v)}" data-form="num" data-v="{k}" aria-label="{k}"></label>' for k, v in ans.items())
+    return (f'<div class="act try xy" id="{qid}" data-vars="{"".join(ans)}" data-kp="/" data-w="{_html.escape(TX(w), quote=True)}"><div class="tq">{lab}<span>{TX(q)}</span></div>'
+            + (f'<div class="sys">{show}</div>' if show else '') +
+            f'<div class="trow"><span class="xyb" dir="ltr">{boxes}</span>{BTN}</div>'
+            f'<div class="fbbar">הקלידו את שני הערכים ולחצו ״בדיקה״.</div><div class="hints">{hh}</div><div class="tsol" hidden>{solh}</div></div>')
+
+
+# ---------------------------------------------------------------- lesson 2 diagrams (no Hebrew inside SVG: only numbers and math)
+def BAL(left, right, op=None, W=520, H=176, n=0, tilt=0):
+    """A balance scale: the two sides of an equation on two pans. op: the operation done to both pans (math), shown under each pan."""
+    cx, by = W / 2, 92
+    dy = tilt * 14
+    g = (f'<polygon points="{cx},{by + 4} {cx - 26},{by + 62} {cx + 26},{by + 62}" fill="#1b2d55"/>'
+         f'<line x1="{cx - 190}" y1="{by + dy}" x2="{cx + 190}" y2="{by - dy}" stroke="#1b2d55" stroke-width="6" stroke-linecap="round"/>'
+         f'<circle cx="{cx}" cy="{by}" r="8" fill="#ff6a4d"/>')
+    for sx, txt, yy in ((cx - 170, left, by + dy), (cx + 170, right, by - dy)):
+        g += (f'<line x1="{sx - 60}" y1="{yy}" x2="{sx - 70}" y2="{yy + 34}" stroke="#8a93aa" stroke-width="2"/><line x1="{sx + 60}" y1="{yy}" x2="{sx + 70}" y2="{yy + 34}" stroke="#8a93aa" stroke-width="2"/>'
+              f'<path d="M{sx - 82} {yy + 34} Q{sx} {yy + 62} {sx + 82} {yy + 34} Z" fill="#fff0d2" stroke="#a86703" stroke-width="2.5"/>'
+              + _t(sx, yy - 12, txt, 26, '#1b2d55'))
+        if op: g += _t(sx, yy + 86, op, 22, '#c4421f')
+    svg = f'<svg class="diag bal" dir="ltr" viewBox="0 0 {W} {H + (30 if op else 0)}" role="img">{g}</svg>'
+    return ST(n, svg, cls='diagw pop') if n else f'<div class="diagw">{svg}</div>'
+
+
+def NUMLINE(lo, hi, bound, op, n0=0, lab=None, W=560, H=110, step=1):
+    """A number line from lo to hi, the boundary as an open (strict) or filled circle, and the solution ray."""
+    x0, x1, y = 30, W - 30, 62
+    X = lambda v: x0 + (v - lo) / (hi - lo) * (x1 - x0)
+    g = f'<line x1="{x0 - 16}" y1="{y}" x2="{x1 + 16}" y2="{y}" stroke="#1b2d55" stroke-width="2.5"/>'
+    v = lo
+    while v <= hi + 1e-9:
+        g += f'<line x1="{X(v):.1f}" y1="{y - 7}" x2="{X(v):.1f}" y2="{y + 7}" stroke="#1b2d55" stroke-width="2"/>' + _t(X(v), y + 32, str(int(v)) if v == int(v) else str(v), 19, '#5d6a86', 600)
+        v += step
+    bx = X(bound)
+    right = op in '>≥'
+    end = x1 + 16 if right else x0 - 16
+    ray = (f'<line x1="{bx:.1f}" y1="{y}" x2="{end:.1f}" y2="{y}" stroke="#ff6a4d" stroke-width="9" stroke-linecap="round" opacity=".85"/>'
+           f'<polygon points="{end + (12 if right else -12):.1f},{y} {end:.1f},{y - 11} {end:.1f},{y + 11}" fill="#ff6a4d"/>')
+    dot = f'<circle cx="{bx:.1f}" cy="{y}" r="10" fill="{"#c4421f" if op in "≤≥" else "#fff"}" stroke="#c4421f" stroke-width="4"/>'
+    lab_t = _t(bx, y - 22, lab, 22, '#c4421f') if lab else ''
+    parts = [_g(n0, g, 'fade'), _g(n0 + 1 if n0 else 0, dot + lab_t), _g(n0 + 2 if n0 else 0, ray, 'draw')]
+    return f'<div class="diagw"><svg class="diag nl" dir="ltr" viewBox="0 0 {W} {H}" role="img">{"".join(parts)}</svg></div>'
+
+
+def GRID100(k, n0=0, col='#ff6a4d', W=260):
+    """A square of 100 small squares, k of them coloured: k percent."""
+    c, g = W / 10, ''
+    for i in range(100):
+        r, q = divmod(i, 10)
+        g += f'<rect x="{q * c + 1:.1f}" y="{r * c + 1:.1f}" width="{c - 2:.1f}" height="{c - 2:.1f}" rx="3" fill="#e9e4d8"/>'
+    hi = ''.join(f'<rect x="{(i % 10) * c + 1:.1f}" y="{(i // 10) * c + 1:.1f}" width="{c - 2:.1f}" height="{c - 2:.1f}" rx="3" fill="{col}"/>' for i in range(k))
+    return f'<svg class="diag g100" dir="ltr" viewBox="0 0 {W} {W}" role="img">{g}{_g(n0, hi, "fade")}</svg>'
+
+
+def PBAR(rows, n0=1, W=560, unit=None):
+    """Horizontal bars, one per click. rows: (label, [(value, colour, text)]). The label and texts are numbers or math only."""
+    mx = max(sum(v for v, _, _ in segs) for _, segs in rows)
+    bw, x0, h, g = W - 120, 104, 40, ''
+    for i, (lab, segs) in enumerate(rows):
+        y = 10 + i * 58
+        x, inner = x0, _t(x0 - 10, y + 28, lab, 22, '#1b2d55', 700, 'end')
+        for v, colr, txt in segs:
+            w = v / mx * bw
+            inner += f'<rect x="{x:.1f}" y="{y}" width="{w:.1f}" height="{h}" rx="6" fill="{colr}"/>' + (_t(x + w / 2, y + 27, txt, 19, '#16213a', 700) if txt else '')
+            x += w
+        g += _g(n0 + i, inner, 'fade')
+    return f'<div class="diagw"><svg class="diag pbar" dir="ltr" viewBox="0 0 {W} {20 + len(rows) * 58}" role="img">{g}</svg></div>'

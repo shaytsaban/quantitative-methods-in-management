@@ -3,7 +3,8 @@ import os, re, subprocess, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 from PIL import Image
 H = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html')
+LES = sys.argv[2] if len(sys.argv) > 2 else '1'
+SRC = os.path.join(H, '..', 'lectures', f'lecture-{LES}', 'presentation.html')
 OUT = sys.argv[1] if len(sys.argv) > 1 else tempfile.mkdtemp()
 os.makedirs(OUT, exist_ok=True)
 CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
@@ -11,12 +12,17 @@ ids = re.findall(r'<section class="slide[^"]*" id="([^"]+)"', open(SRC, encoding
 def shot(a):
     i, sid = a
     p = os.path.join(OUT, f's{i:03d}.png')
-    subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={OUT}/p{i % 6}', '--window-size=1280,778', '--hide-scrollbars', '--virtual-time-budget=4000', f'--screenshot={p}', f'file://{os.path.abspath(SRC)}?all#{sid}'], capture_output=True, timeout=120)
+    for _try in range(3):
+        try:
+            subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-sandbox', f'--user-data-dir={OUT}/p{i % 6}', '--window-size=1280,778', '--hide-scrollbars', '--virtual-time-budget=4000', f'--screenshot={p}', f'file://{os.path.abspath(SRC)}?all#{sid}'], capture_output=True, timeout=60)
+            if os.path.exists(p): return p
+        except subprocess.TimeoutExpired:
+            subprocess.run(['pkill', '-f', f'{OUT}/p{i % 6}'], capture_output=True)
     return p
 for k in range(6):
     with ThreadPoolExecutor(1) as ex: pass
-chunks = [[(i, s) for i, s in enumerate(ids) if i % 6 == k] for k in range(6)]
-with ThreadPoolExecutor(6) as ex:
+chunks = [[(i, s) for i, s in enumerate(ids) if i % 3 == k] for k in range(3)]
+with ThreadPoolExecutor(3) as ex:
     list(ex.map(lambda ch: [shot(a) for a in ch], chunks))
 W, Hh = 640, 360
 for k in range(0, len(ids), 6):

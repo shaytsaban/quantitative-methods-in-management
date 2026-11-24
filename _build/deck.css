@@ -486,3 +486,36 @@ svg.diag .mi{font-family:'Times New Roman',Times,serif;font-style:italic}
 .anat .pc{padding:0 6px;line-height:1.15}
 .anat .pc>span:first-child{display:block;height:74px}
 .anat .tag{margin-top:6px}
+
+/* ===================== meeting 2: fractions, systems, inequalities, percentages ===================== */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.12;margin:0 3px;font-size:.9em}
+.frac>span{padding:1px 6px;white-space:nowrap}
+.frac>span:first-child{border-bottom:2px solid currentColor}
+.xin{display:inline-flex;align-items:center;gap:6px;font:700 24px 'Heebo',Arial,sans-serif;color:var(--navy2);direction:ltr}
+.xin i{font-family:'Times New Roman',Times,serif;font-size:1.15em}
+.xin input.ex{width:110px;flex:none}
+.try.xy .trow{gap:12px}
+.sys{display:inline-flex;flex-direction:column;gap:2px;direction:ltr;border-left:4px solid var(--navy2);padding:2px 14px;margin:6px 0 2px;font-size:24px;font-weight:700;color:var(--navy2)}
+.sys .sysl{display:block}
+.qstem .sys{font-size:28px;margin:8px auto 2px;display:flex;width:max-content}
+svg.bal{max-height:210px}
+.icons{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;direction:ltr;font-size:30px;font-weight:800;color:var(--navy2)}
+.icons svg{width:46px;height:46px}
+.pct{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center}
+.pct svg{width:260px;height:260px}
+.fmla{background:var(--navy2);color:#fff;border-radius:16px;padding:10px 18px;text-align:center}
+.fmla .eq{color:#fff;text-align:center;font-size:30px;margin:2px 0}
+.fmla .rl{color:#ffd37a;font-weight:800;font-size:18px}
+.fmla p{color:#d6e0f7;font-size:18.5px;line-height:1.35}
+
+.balg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.balc{padding:8px 14px}
+.balc .wn{font-size:19px;line-height:1.35;color:var(--ink2);display:flex;gap:8px;align-items:baseline}
+.balc .wn>b{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--navy2);color:#fff;font-size:15px;font-weight:800}
+.balc.fin{background:var(--incbg);display:flex;flex-direction:column;justify-content:center}
+.balw svg{width:100%;height:auto;max-height:170px;display:block}
+.rules .sys{font-size:20px;margin:2px 0}
+.route.r6{grid-template-columns:repeat(3,1fr)}.route.r6 .rcard{min-height:128px}
+.xyb{display:inline-flex;gap:12px;direction:ltr}
+.fmla .m,.fmla .m i,.rule .m{color:#fff}
+.fmla .frac>span:first-child{border-color:#fff}

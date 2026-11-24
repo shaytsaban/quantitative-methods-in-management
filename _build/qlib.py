@@ -18,6 +18,29 @@ def _grp(s, i, o='(', c=')'):
     raise ValueError('unbalanced: ' + s)
 
 
+def _top_split(body, sep='|'):
+    """Split at the first separator that is not inside braces or brackets."""
+    d = 0
+    for j, ch in enumerate(body):
+        if ch in '{(': d += 1
+        elif ch in '})': d -= 1
+        elif ch == sep and d == 0: return body[:j], body[j + 1:]
+    raise ValueError('no top level separator: ' + body)
+
+
+def _unfrac(s):
+    """{f|a|b} -> ((a)/(b)), recursively, so the checker reads a fraction as a division."""
+    out, i = '', 0
+    while i < len(s):
+        if s.startswith('{f|', i):
+            a, i = _grp(s, i, '{', '}')
+            n, d = _top_split(a[2:])
+            out += f'(({_unfrac(n)})/({_unfrac(d)}))'
+        else:
+            out += s[i]; i += 1
+    return out
+
+
 def PM(s):
     """Plain math to HTML. ^2, ^(a+b) -> superscript; * -> middle dot; - -> minus; letters italic;
     {1|...} colour 1 to 4, {x|...} struck out, {b|...} boxed; "..." Hebrew words; _ a thin gap."""
@@ -33,6 +56,10 @@ def PM(s):
             else:
                 m = re.match(r'-?(?:\d+|[a-zA-Z])', s[i + 1:]); a = m.group(0); i += 1 + len(a)
             out.append(f'<sup>{PM(a)}</sup>'); prev = True
+        elif c == '{' and s[i + 1:i + 3] == 'f|':
+            a, i = _grp(s, i, '{', '}')
+            num, den = _top_split(a[2:])
+            out.append(f'<span class="frac"><span>{PM(num)}</span><span>{PM(den)}</span></span>'); prev = True
         elif c == '{':
             a, i = _grp(s, i, '{', '}')
             k, body = a.split('|', 1)
@@ -49,6 +76,9 @@ def PM(s):
             out.append(f' {sym} ' if prev else sym); prev = False; i += 1
         elif c in '=≠≈':
             out.append(f' {c} '); prev = False; i += 1
+        elif c in '<>≤≥':
+            if s[i + 1:i + 2] == '=': c = {'<': '≤', '>': '≥'}[c]; i += 1
+            out.append(f' {_h.escape(c)} '); prev = False; i += 1
         elif c in '*·':
             out.append('·'); prev = False; i += 1
         elif c in '/÷':
@@ -94,7 +124,9 @@ def TX(s):
 # ---------------------------------------------------------------- numeric checker (the same grammar as act.js)
 def strip(s):
     """Plain syntax without the display markup."""
+    s = _unfrac(s)
     s = re.sub(r'\{\w\|', '', s).replace('}', '').replace('_', '').replace('·', '*').replace('÷', '/').replace('−', '-')
+    s = s.replace('<=', '≤').replace('>=', '≥')
     return re.sub(r'"[^"]*"', '', s).replace(' ', '')
 
 
@@ -132,9 +164,10 @@ class _P:
         raise ValueError(f'cannot read {self.s!r} at {self.i}')
 
 
-def ev(s, k=0):
+def ev(s, k=0, at=None):
     s = strip(s)
     env = {ch: (2.718281828459045 if ch == 'e' else 0.6 + ((ord(ch) * 7 + k * 13) % 19) / 9) for ch in 'abcdefghijklmnopqrstuvwxyz'}
+    env.update(at or {})
     p = _P(s, env); v = p.expr()
     assert p.i == len(s), f'trailing text in {s!r} at {p.i}'
     return v
@@ -151,3 +184,76 @@ def chain(line, ans=None):
         assert same(sides[0], x), f'not equal: {sides[0]}  vs  {x}   in {line}'
     if ans is not None:
         assert same(sides[-1], ans), f'does not reach the answer {ans}: {line}'
+
+
+# ---------------------------------------------------------------- equations and inequalities
+REL = re.compile(r'(≤|≥|<|>|=)')
+FLIP = {'<': '>', '>': '<', '≤': '≥', '≥': '≤'}
+
+
+def rel_split(line):
+    p = REL.split(strip(line))
+    return p[0::2], p[1::2]
+
+
+def _close(a, b):
+    return abs(a - b) <= 1e-9 * max(1, abs(a), abs(b))
+
+
+def _holds(a, op, b):
+    return {'=': _close(a, b), '<': a < b - 1e-12, '>': a > b + 1e-12, '≤': a <= b + 1e-12, '≥': a >= b - 1e-12}[op]
+
+
+def ineq_parts(ans):
+    """'x<-3' -> ('x', '<', -3.0)."""
+    sides, ops = rel_split(ans)
+    assert len(ops) == 1 and ops[0] != '=' and re.fullmatch(r'[a-z]', sides[0]), ans
+    return sides[0], ops[0], ev(sides[1])
+
+
+def eq_check(line, sol):
+    """Every side of an equation line has the same value at the solution (a dict of the unknowns)."""
+    sides, ops = rel_split(line)
+    assert ops and all(o == '=' for o in ops), 'not an equation: ' + line
+    vals = [ev(x, at=sol) for x in sides]
+    assert all(_close(vals[0], v) for v in vals[1:]), f'the solution {sol} does not satisfy: {line}  {vals}'
+
+
+def ineq_check(line, var, op, bound):
+    """A step of an inequality keeps the same solution set: equality on the boundary, true inside, false outside."""
+    sides, ops = rel_split(line)
+    if all(o == '=' for o in ops):
+        return eq_check(line, {var: bound})
+    assert len(ops) == 1, 'one relation per line: ' + line
+    o = ops[0]
+    L, R = sides
+    assert _close(ev(L, at={var: bound}), ev(R, at={var: bound})), f'boundary {bound} lost in: {line}'
+    inside = bound - 1 if op in '<≤' else bound + 1
+    outside = bound + 1 if op in '<≤' else bound - 1
+    assert _holds(ev(L, at={var: inside}), o, ev(R, at={var: inside})), f'{var}={inside} should satisfy: {line}'
+    assert not _holds(ev(L, at={var: outside}), o, ev(R, at={var: outside})), f'{var}={outside} should not satisfy: {line}'
+    assert (o in '≤≥') == (op in '≤≥'), f'strict and non strict mixed: {line}'
+
+
+def step_check(line, target=None, sol=None):
+    """One worked line. sol: a dict (equation or system) or (var, op, bound) for an inequality."""
+    if isinstance(sol, tuple): return ineq_check(line, *sol)
+    if isinstance(sol, dict) and REL.search(strip(line)) and not (('=' in strip(line)) and target is not None and line.startswith('=')):
+        return eq_check(line, sol)
+    if line.startswith('='): return chain(line[1:], target)
+    return chain(line)
+
+
+def solution_of(expr, a):
+    """From a question (an equation, an inequality, or two equations 'e1;e2') and its answer: the solution every
+    worked line must keep. The question itself is checked against the answer. None when the question is an expression."""
+    if not expr or not REL.search(strip(expr)): return None
+    if isinstance(a, dict): sol = {k: ev(v) for k, v in a.items()}
+    elif REL.search(strip(a)): sol = ineq_parts(a)
+    else:
+        vs = sorted(set(re.findall(r'[a-z]', strip(expr))) - {'e'})
+        assert len(vs) == 1, ('one unknown expected', expr)
+        sol = {vs[0]: ev(a)}
+    for part in strip(expr).split(';'):
+        step_check(part, None, sol)
+    return sol
