@@ -68,6 +68,33 @@
   "out": ""
  },
  {
+  "kind": "try",
+  "id": "t-r5",
+  "a": "x^2+9",
+  "form": "exp",
+  "expr": "(x+3)^2-6x",
+  "traps": [
+   [
+    "x^2+9-6x",
+    "חסר האיבר האמצעי: <span class=\"m\" dir=\"ltr\">(<i>x</i> + 3)<sup>2</sup> = <i>x</i><sup>2</sup> + 6<i>x</i> + 9</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-r6",
+  "a": "x(x-3)",
+  "form": "fac",
+  "expr": "x^2-3x",
+  "traps": [],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": "x"
+ },
+ {
   "kind": "mc",
   "id": "e-mc-q",
   "right": "מחסירים 7 משני האגפים: 4x = 12",
