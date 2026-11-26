@@ -79,7 +79,7 @@ async function solve(s){
  s.querySelectorAll('.mc').forEach(q=>{const m=byId[q.id];const a=+q.dataset.a,os=[...q.querySelectorAll('.o')];let ok=!!m&&os.length===m.n&&plain(os[a]).slice(3)===m.right.replace(/\s+/g,' ').trim();const w=(a+1)%os.length;os[w].click();ok=ok&&os[w].classList.contains('bad')&&os[a].classList.contains('ok')&&getComputedStyle(q.querySelector('.w')).display!=='none';
   q.classList.remove('done');os.forEach(o=>o.classList.remove('ok','bad'));os[a].click();ok=ok&&os[a].classList.contains('ok')&&!os.some(o=>o.classList.contains('bad'));R.mc.push({id:q.id,ok,a,n:os.length});});}
 for(let i=0;i<D.slides.length;i++){const s=D.slides[i];D.show(i);measure(s,i,'first');D.setAll(s,true);measure(s,i,'open');wide(s);bidi(s);small(s);
- const txt=s.textContent;[['em','—'],['maqaf','־'],['en','–'],['ell','…'],['arrow','→'],['q1','“'],['q2','”'],['hyphenminus-in-math',null]].forEach(([k,c])=>{if(c&&txt.includes(c))R.chars.push({id:s.id,k});});
+ const txt=s.textContent;[['dollar','$'],['em','—'],['maqaf','־'],['en','–'],['ell','…'],['arrow','→'],['q1','“'],['q2','”'],['hyphenminus-in-math',null]].forEach(([k,c])=>{if(c&&txt.includes(c))R.chars.push({id:s.id,k});});
  s.querySelectorAll('.eq,.m').forEach(e=>{if(/-/.test(e.textContent))R.chars.push({id:s.id,k:'ascii minus in math: '+e.textContent.slice(0,20)});});
  await solve(s);measure(s,i,'solved');wide(s);
  }

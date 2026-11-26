@@ -26,6 +26,7 @@ h1.mt{font-size:19pt;background:var(--navy);color:#fff;border:0;border-radius:1.
 h2{font-size:14pt;color:var(--navy);margin:4mm 0 1.5mm;border-bottom:.5mm solid var(--coral);padding-bottom:.6mm;break-after:avoid}
 .sys{direction:ltr;unicode-bidi:isolate;border-left:.8mm solid var(--navy);padding:0 3mm;margin:1mm auto;width:max-content;font-size:13pt;font-weight:700}.sys span{display:block}
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .6mm;font-size:.9em}.frac>span{padding:0 1.2mm}.frac>span:first-child{border-bottom:.3mm solid currentColor}
+.optag{display:inline-block;margin-left:5mm;color:#c4421f;font-weight:700}.kh{background:#c9f0b4;border-radius:1mm;padding:0 .8mm}.kc{border:.5mm solid #e0454f;border-radius:3mm;padding:0 .8mm}.kx{text-decoration:line-through;text-decoration-color:#e0454f;opacity:.6}
 .fin{background:var(--incbg);border-right:1.2mm solid var(--inc);border-radius:1mm;padding:.8mm 2.6mm;font-weight:700}
 '''
 head = lambda t, s: (f'<div class="hd"><div class="k">{COURSE} · המרכז האקדמי למשפט ולעסקים, רמת גן</div><h1 class="t">{t}</h1><div class="s">{s}</div><div class="cr">{CR1}<br>{CR2}</div></div>')
@@ -59,7 +60,7 @@ def body(sol, meetings):
 intro = ('<div class="note"><b>איך עובדים עם החוברת.</b> פותרים על דף, שורה לכל פעולה. בסוף החוברת מופיעות התשובות הסופיות, לבדיקה מהירה. '
          'הפתרון המלא של כל תרגיל, שלב אחר שלב, נמצא בקובץ הפתרונות באתר הקורס. פותחים אותו רק אחרי שמנסים לבד. התרגילים אינם להגשה.</div>')
 wrap = lambda t, b: f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>{COURSE} | {t}</title><style>{CSS}</style></head><body>{b}<p class="url" style="margin-top:4mm">{SITE}</p></body></html>'
-MEETINGS = sorted({m for m, _ in TOPICS})
+MEETINGS = sorted({m for m, _ in TOPICS} & PUBLISHED)
 mine = lambda ms: [e for e in EX if TOPICS[e[1]][0] in ms]
 anst = lambda es: '<h1>תשובות סופיות</h1><div class="two"><table class="ans"><tr><th>תרגיל</th><th>תשובה</th></tr>' + ''.join(f'<tr><td>{e[0]}</td><td>{ANS(e[4])}</td></tr>' for e in es) + '</table></div>'
 OUT = os.path.join(H, '..', 'materials')

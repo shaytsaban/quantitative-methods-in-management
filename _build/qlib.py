@@ -50,6 +50,8 @@ def PM(s):
         c = s[i]
         if c == ' ':
             i += 1
+        elif c == '@':
+            out.append(f'<span class="optag">/ {PM(s[i + 1:])}</span>'); break
         elif c == '^':
             if s[i + 1] == '(':
                 a, i = _grp(s, i + 1)
@@ -124,6 +126,7 @@ def TX(s):
 # ---------------------------------------------------------------- numeric checker (the same grammar as act.js)
 def strip(s):
     """Plain syntax without the display markup."""
+    s = re.sub(r'@[^;]*', '', s)
     s = _unfrac(s)
     s = re.sub(r'\{\w\|', '', s).replace('}', '').replace('_', '').replace('·', '*').replace('÷', '/').replace('−', '-')
     s = s.replace('<=', '≤').replace('>=', '≥')

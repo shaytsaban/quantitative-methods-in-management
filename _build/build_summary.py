@@ -60,6 +60,8 @@ table.tbl2{width:100%;margin:1mm 0 2mm;font-size:11pt}.tbl2 th{background:var(--
 .icons{direction:ltr;display:flex;gap:1.5mm;justify-content:center;align-items:center;font-weight:700}.icons svg{width:8mm;height:8mm}
 svg.nl{width:100mm;max-width:100%;height:auto;display:block;margin:1mm auto;direction:ltr;font-family:"David"}svg.pbar{width:100mm;display:block;margin:1mm auto;direction:ltr}
 .xin{direction:ltr}.tsl .m{white-space:normal}
+.optag{display:inline-block;margin-left:5mm;color:#c4421f;font-weight:700}.kh{background:#c9f0b4;border-radius:1mm;padding:0 .8mm}.kc{border:.5mm solid #e0454f;border-radius:3mm;padding:0 .8mm}.kx{text-decoration:line-through;text-decoration-color:#e0454f;opacity:.6}.kb{box-shadow:inset 0 0 0 .4mm #f0b429;border-radius:1mm;padding:0 .8mm}
+.sysq{display:inline-flex;flex-direction:column;border-left:.5mm solid #1b2d55;padding-left:2mm;vertical-align:middle;margin:.5mm 0}.sysq .sysl{display:block}.lab2{display:flex;justify-content:space-around;gap:2mm;font-size:9.5pt}.g2x2,.prod4{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
 .recp{background:#eef8f6;border-right:1.2mm solid #0f9d90;padding:1mm 2.5mm;border-radius:1.2mm;font-size:11pt}
 li.ebad{color:#b3261e}li.ebad .m{text-decoration:line-through}.efix{background:#e8f6ee;border-right:1.2mm solid #25a65f;padding:1mm 2.5mm;border-radius:1.2mm;margin:1mm 0}.efr{display:flex;justify-content:space-between;gap:3mm;padding:.4mm 0}
 

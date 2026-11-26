@@ -130,9 +130,26 @@ def _line(x, target, sol=None):
     m, note = x
     if m.startswith('~'):
         m = m[1:]
+    elif ';' in m:
+        for part in m.split(';'):
+            step_check(part, target, sol); NCHK[0] += 1
     else:
         step_check(m, target, sol); NCHK[0] += 1
     return m, note
+
+
+def _MI(m):
+    """Inline (summary PDF): a system 'e1;e2' is stacked; anything else is a math run."""
+    if ';' in m:
+        return '<span class="sysq" dir="ltr">' + ''.join(f'<span class="sysl">{PM(p)}</span>' for p in m.split(';')) + '</span>'
+    return MI(m)
+
+
+def _EQ(m):
+    """One worked line; two equations 'e1;e2' are shown as a system, one under the other."""
+    if ';' in m:
+        return '<div class="eq sysq" dir="ltr">' + ''.join(f'<span class="sysl">{PM(p)}</span>' for p in m.split(';')) + '</div>'
+    return EQ(m)
 
 
 def _sol_of(expr, a):
@@ -151,23 +168,29 @@ def _nterms(a):
     return n
 
 
+def _c2(size, n):
+    """Long solutions (lesson 2 on): two columns of steps, the right one first, so a calculation never leaves the slide."""
+    return f' style="grid-template-rows:repeat({(n + 1) // 2},auto)"' if 'c2' in size.split() else ''
+
+
 def WORK(sid, tag, title, stem, steps, expr=None, ans=None, tip=None, extra='', size='', layout='', kick=None, sol=None, show=None):
     """A worked example: the full question beside its solution, one stage per click, the note above each equation.
     expr: the expression of the question, shown large in the question card. ans: the target of every '=' line."""
     target = ans if ans is not None else expr
     if sol is None and expr and ans is not None: sol = _sol_of(expr, ans)
-    rows = [_line(x, target, sol) for x in steps]
+    rows = [_line(x[:2], target, sol) for x in steps]
+    ext = [x[2] if len(x) > 2 else '' for x in steps]   # optional html under a line (labels)
     stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem) + (show if show is not None else (EQ(expr) if expr else ''))
     if MODE == 'pdf':
-        li = ''.join(f'<li>{TX(note)} {MI(m) if m else ""}</li>' for m, note in rows)
+        li = ''.join(f'<li>{TX(note)} {_MI(m) if m else ""}</li>' for m, note in rows)
         S(sid, title, title, f'<div class="qstem">{stem_html}</div>{extra}<ol class="steps">{li}</ol>' + (BAND('tip', tip) if tip else ''))
         return
     r = ''
     for i, (m, note) in enumerate(rows):
         fin = ' fin' if i == len(rows) - 1 else ''
-        r += ST(i + 1, f'<div class="wn"><b>{i + 1}</b><span>{TX(note)}</span></div>{EQ(m) if m else ""}', cls='wkr' + fin)
+        r += ST(i + 1, f'<div class="wn"><b>{i + 1}</b><span>{TX(note)}</span></div>{_EQ(m) if m else ""}{ext[i]}', cls='wkr' + fin)
     end = BAND('tip', tip, len(rows) + 1) if tip else ''
-    body = f'<div class="qg {layout}"><div class="qr"><div class="card qstem">{stem_html}</div>{extra}</div><div class="solw"><div class="wk {size}">{r}</div>{end}</div></div>'
+    body = f'<div class="qg {layout}"><div class="qr"><div class="card qstem">{stem_html}</div>{extra}</div><div class="solw"><div class="wk {size}"{_c2(size, len(rows))}>{r}</div>{end}</div></div>'
     S(sid, title, title, body, kick=kick or KICK(tag), cls='qslide')
 
 
@@ -193,7 +216,7 @@ def _trydata(a, form, terms, out, nb, traps):
 
 def _trysol(a, steps, sol=None):
     rows = [_line(x, a, sol) for x in steps]
-    h = ''.join(f'<div class="tstep{" fin" if i == len(rows) - 1 else ""}"><div class="wn">{TX(note)}</div>{EQ(m) if m else ""}</div>' for i, (m, note) in enumerate(rows))
+    h = ''.join(f'<div class="tstep{" fin" if i == len(rows) - 1 else ""}"><div class="wn">{TX(note)}</div>{_EQ(m) if m else ""}</div>' for i, (m, note) in enumerate(rows))
     return rows, h
 
 
@@ -228,7 +251,7 @@ def TRY(qid, q, a, hints=(), steps=(), form=None, terms=None, out=None, nb=None,
     _qe = re.findall(r'\$([^$]*)\$', q)
     MAN.append(dict(kind='try', id=qid, a=strip(a), form=_form(a, form), expr=(strip(_qe[-1]) if _qe else ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
-        li = ' '.join(f'{TX(note)} {MI(m)}.' for m, note in rows)
+        li = ' '.join(f'{TX(note)} {_MI(m)}.' for m, note in rows)
         return f'<div class="tryp"><p><b>{num + ". " if num else ""}</b>{TX(q)}</p><p class="tsl"><b>פתרון:</b> {li}</p><p><b>תשובה:</b> {MI(a)}</p></div>'
     NACT[0] += 1
     hh = ''.join(f'<div>{TX(x)}</div>' for x in hints)
@@ -259,7 +282,7 @@ def TRYBIG(sid, tag, title, stem, a, hints=(), steps=(), expr=None, form=None, t
     vs = vars_ or ''.join(sorted(set(letters) | set(re.findall(r'[a-z]', strip(expr or ''))))) or 'x'
     MAN.append(dict(kind='try', id=sid + '-t', a=strip(a), form=_form(a, form), expr=strip(expr or ''), traps=[[strip(x), TX(m)] for x, m in traps], nsteps=len(steps) + (1 if tip else 0), nhints=len(hints), out=strip(out) if out else ''))
     if MODE == 'pdf':
-        li = ''.join(f'<li>{TX(note)} {MI(m)}</li>' for m, note in rows)
+        li = ''.join(f'<li>{TX(note)} {_MI(m)}</li>' for m, note in rows)
         S(sid, title, title, f'<div class="qstem">{stem_html}</div>{extra}<ol class="steps">{li}</ol><div class="band ans"><b>תשובה:</b> {MI(a)}</div>' + (BAND('tip', tip) if tip else ''))
         return
     NACT[0] += 1
@@ -440,7 +463,7 @@ def TRYXY(qid, q, ans, hints=(), steps=(), w='', num=None, expr=None, show=True)
     MAN.append(dict(kind='try2', id=qid, a={k: strip(v) for k, v in ans.items()}, nsteps=len(steps), nhints=len(hints)))
     show = ''.join(f'<span class="sysl">{MI(e)}</span>' for e in (expr or '').split(';')) if expr and show else ''
     if MODE == 'pdf':
-        li = ' '.join(f'{TX(note)} {MI(m)}.' for m, note in rows if m or note)
+        li = ' '.join(f'{TX(note)} {_MI(m)}.' for m, note in rows if m or note)
         return f'<div class="tryp"><p><b>{num + ". " if num else ""}</b>{TX(q)}</p>{f"<div class=sys>{show}</div>" if show else ""}<p class="tsl"><b>פתרון:</b> {li}</p><p><b>תשובה:</b> ' + MI('(' + ', '.join(ans) + ') = (' + ', '.join(ans.values()) + ')') + '</p></div>'
     NACT[0] += 1
     hh = ''.join(f'<div>{TX(x)}</div>' for x in hints)
@@ -549,7 +572,7 @@ def ERR(sid, title, h, q, lines, bad, why, fix, expr=None, ans=None, wrong=None,
     fixh = ''.join(f'<div class="efr"><span>{TX(n)}</span>{EQ(mm) if mm else ""}</div>' for mm, n in fixr)
     MAN.append(dict(kind='err', id=sid + '-w', bad=bad, n=len(lines)))
     if MODE == 'pdf':
-        li = ''.join(f'<li{" class=ebad" if i == bad else ""}>{TX(labels[i])} {MI(mm.lstrip("~")) if mm.strip("~") else ""}' + (' <b>כאן הטעות.</b>' if i == bad else '') + '</li>' for i, (mm, n) in enumerate(lines))
+        li = ''.join(f'<li{" class=ebad" if i == bad else ""}>{TX(labels[i])} {_MI(mm.lstrip("~")) if mm.strip("~") else ""}' + (' <b>כאן הטעות.</b>' if i == bad else '') + '</li>' for i, (mm, n) in enumerate(lines))
         S(sid, title, h, f'<div class="qstem">{stem}</div><ol class="steps">{li}</ol>' + BAND('trap', why) + f'<div class="efix">{fixh}</div>')
         return
     NACT[0] += 1

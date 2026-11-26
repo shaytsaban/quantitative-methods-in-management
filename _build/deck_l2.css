@@ -1,0 +1,48 @@
+/* lesson 2 and on only: lesson 1 is taught and must rebuild byte-identical */
+/* the order of work beside practice (lesson 2) */
+.recipe{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:#fff;border-radius:12px;padding:7px 12px;margin:0 0 10px;box-shadow:0 2px 0 var(--line);border-right:6px solid #0f9d90}
+.recipe>b{font-size:18px;color:#087469;margin-left:4px}
+.recipe>span{display:inline-flex;align-items:center;gap:6px;font-size:18px;line-height:1.25;background:#eef8f6;border-radius:999px;padding:3px 11px 3px 6px}
+.recipe>span>i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0f9d90;color:#fff;font-size:16.5px;font-weight:800}
+/* find the mistake */
+.elines{display:flex;flex-direction:column;gap:7px}
+.el{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.el:hover{border-color:var(--coral)}
+.el .eln{flex:none;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--navy2);color:#fff;font-size:17px;font-weight:800}
+.el .eq{flex:1;font-size:26px;margin:0;text-align:left;font-weight:600;color:var(--navy2)}
+.el .eln2{font-size:19px;color:var(--ink2);flex:none;max-width:60%}
+.el.okl{border-color:#25a65f;background:#eefaf2}
+.el.later{border-color:#f0b429;background:#fff8e6}
+.el.bad{border-color:#e0454f;background:#fde8ea}
+.el.bad .eq{color:#b3261e;text-decoration:line-through;text-decoration-thickness:2px}
+.el.after{display:none}
+.elines.solved .el{cursor:default}
+.efix{background:var(--incbg);border-right:6px solid var(--inc);border-radius:12px;padding:6px 14px;margin-top:7px}
+.efix .ct{display:block;font-size:19px;margin-bottom:2px}
+.efr{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:18px;line-height:1.3;padding:3px 0;border-top:1px dashed #b9dfc9}
+.efr:first-of-type{border-top:0}
+.efr .eq{font-size:22px;margin:0;font-weight:700;color:#0b6b3a;white-space:nowrap}
+.err .fbbar{font-size:19px;min-height:56px}
+.recipe>span>em{font-style:normal}
+
+/* class notation (Shay, meeting 2): the operation on both sides beside the line, the substituted expression highlighted,
+   equal coefficients circled, cancelled terms struck */
+.optag{display:inline-block;margin-left:30px;color:#d9452b;font-weight:700;font-size:.86em;white-space:nowrap}
+.kh{background:#c9f0b4;border-radius:6px;padding:0 4px}
+.kc{display:inline-block;border:3px solid #e0454f;border-radius:999px;padding:0 6px;line-height:1.15}
+.sysq{display:inline-flex;flex-direction:column;align-items:flex-start;border-left:4px solid var(--navy2);padding-left:12px;gap:2px}
+.sysq .sysl{display:block}
+.lab2{display:flex;justify-content:space-around;gap:8px;margin-top:3px}
+.lab2 span{font-size:17px;border-radius:8px;padding:2px 9px;background:#fff}
+.g2x2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
+.g2x2>.card,.g2x2>.fmla{margin:0}
+.prod4{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.prod4 .eq{font-size:22px;margin:2px 0}
+/* long worked solutions: the question across the top, the steps in two columns (right column first) */
+.qg.top2{grid-template-columns:1fr;gap:10px}
+.qg.top2>.qr{flex-direction:row;gap:12px;align-items:stretch}
+.qg.top2>.qr>*{flex:1 1 0;min-width:0;margin:0}
+.qg.top2>.qr>.qstem{flex:1.25 1 0}
+.wk.c2{display:grid;grid-auto-flow:column;grid-template-columns:1fr 1fr;gap:4px 10px}
+.wk.c2 .wkr{padding:3px 12px 3px}.wk.c2 .wkr .eq{font-size:22px;margin:0}.wk.c2 .wkr .wn{font-size:17px}
+.wk.c2 .lab2 span{font-size:16.5px;padding:1px 7px}

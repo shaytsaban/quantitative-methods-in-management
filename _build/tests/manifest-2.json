@@ -129,7 +129,7 @@
   "traps": [
    [
     "3",
-    "מחלקים ב-<span class=\"m\" dir=\"ltr\">−3</span>: <span class=\"m\" dir=\"ltr\">9 ÷ (−3) = −3</span>."
+    "מחלקים <span class=\"m\" dir=\"ltr\">−9</span> ב-<span class=\"n\">3</span>: התוצאה שלילית, <span class=\"m\" dir=\"ltr\">−3</span>."
    ]
   ],
   "nsteps": 3,
@@ -161,7 +161,7 @@
   "traps": [
    [
     "-2",
-    "שלילי חלקי שלילי נותן חיובי: <span class=\"m\" dir=\"ltr\">−6 ÷ (−3) = 2</span>."
+    "מ-<span class=\"m\" dir=\"ltr\">6 = 3<i>x</i></span>: חיובי חלקי חיובי, <span class=\"m\" dir=\"ltr\"><i>x</i> = 2</span>."
    ]
   ],
   "nsteps": 3,
@@ -197,10 +197,10 @@
   "traps": [
    [
     "-10",
-    "מ-<span class=\"m\" dir=\"ltr\">−<i>x</i> + 10 = 0</span> מקבלים <span class=\"m\" dir=\"ltr\">−<i>x</i> = −10</span>, כלומר <span class=\"m\" dir=\"ltr\"><i>x</i> = 10</span>."
+    "מ-<span class=\"m\" dir=\"ltr\">−<i>x</i> + 10 = 0</span> מקבלים <span class=\"m\" dir=\"ltr\">10 = <i>x</i></span>."
    ]
   ],
-  "nsteps": 4,
+  "nsteps": 6,
   "nhints": 2,
   "out": ""
  },
@@ -216,7 +216,29 @@
     "המינוס שלפני השבר השני חל על כל המונה: <span class=\"m\" dir=\"ltr\">−2(1 − 5<i>x</i>) = −2 + 10<i>x</i></span>."
    ]
   ],
-  "nsteps": 5,
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d1",
+  "a": "1",
+  "form": "num",
+  "expr": "((x)/(x-2))-((1)/(4))=((5)/(4x-8))",
+  "traps": [],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d2",
+  "a": "-1/3",
+  "form": "num",
+  "expr": "((x)/(x-3))+((1)/(x(x-3)))=1",
+  "traps": [],
+  "nsteps": 6,
   "nhints": 2,
   "out": ""
  },
@@ -238,17 +260,17 @@
    "x": "5",
    "y": "3"
   },
-  "nsteps": 5,
+  "nsteps": 7,
   "nhints": 2
  },
  {
   "kind": "try2",
-  "id": "t-m2",
+  "id": "t-m4",
   "a": {
-   "x": "1",
-   "y": "-1"
+   "x": "3",
+   "y": "2"
   },
-  "nsteps": 4,
+  "nsteps": 7,
   "nhints": 2
  },
  {
@@ -258,7 +280,7 @@
    "x": "60",
    "y": "40"
   },
-  "nsteps": 6,
+  "nsteps": 7,
   "nhints": 2
  },
  {
@@ -358,45 +380,6 @@
   "out": ""
  },
  {
-  "kind": "mc",
-  "id": "iq-mc-q",
-  "right": "x < −4",
-  "n": 4
- },
- {
-  "kind": "try",
-  "id": "t-i1",
-  "a": "x>1",
-  "form": "ineq",
-  "expr": "4x+1>7-2x",
-  "traps": [],
-  "nsteps": 3,
-  "nhints": 1,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-i2",
-  "a": "x≥3",
-  "form": "ineq",
-  "expr": "5-x≤2",
-  "traps": [],
-  "nsteps": 3,
-  "nhints": 1,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "iq-biz-t",
-  "a": "x≤50",
-  "form": "ineq",
-  "expr": "40x+600≤2600",
-  "traps": [],
-  "nsteps": 4,
-  "nhints": 2,
-  "out": ""
- },
- {
   "kind": "try",
   "id": "x-1-t",
   "a": "80",
@@ -447,52 +430,10 @@
   "out": ""
  },
  {
-  "kind": "try",
-  "id": "x-4-t",
-  "a": "x>10/3",
-  "form": "ineq",
-  "expr": "2(x+1)+2(2x-4)>14",
-  "traps": [
-   [
-    "x>20/3",
-    "מחלקים את <span class=\"n\">20</span> ב-<span class=\"n\">6</span>, ולא ב-<span class=\"n\">3</span>: <span class=\"m\" dir=\"ltr\">20/6 = 10/3</span>."
-   ],
-   [
-    "x<10/3",
-    "מחלקים ב-<span class=\"n\">6</span>, מספר חיובי: הסימן לא מתהפך."
-   ]
-  ],
-  "nsteps": 6,
-  "nhints": 2,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-d1",
-  "a": "1",
-  "form": "num",
-  "expr": "((x)/(x-2))-((1)/(4))=((5)/(4x-8))",
-  "traps": [],
-  "nsteps": 3,
-  "nhints": 1,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-d2",
-  "a": "-1/3",
-  "form": "num",
-  "expr": "((x)/(x-3))+((1)/(x(x-3)))=1",
-  "traps": [],
-  "nsteps": 4,
-  "nhints": 2,
-  "out": ""
- },
- {
   "kind": "err",
   "id": "hx-e-w",
   "bad": 2,
-  "n": 5
+  "n": 4
  },
  {
   "kind": "try",
@@ -570,42 +511,130 @@
   "kind": "err",
   "id": "hx-f-w",
   "bad": 2,
-  "n": 5
+  "n": 6
  },
  {
   "kind": "try",
-  "id": "t-hf3",
-  "a": "20",
+  "id": "t-c1",
+  "a": "11/12",
   "form": "num",
-  "expr": "((x)/(5))+3=7",
+  "expr": "((1)/(4))+((2)/(3))",
   "traps": [
    [
-    "4",
-    "זה הערך של השבר <span class=\"m\" dir=\"ltr\"><i>x</i>/5</span>. נשאר לכפול ב-<span class=\"n\">5</span>."
-   ],
+    "3/7",
+    "לא מחברים מכנים. קודם מרחיבים למכנה משותף, ורק אז מחברים מונים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c2",
+  "a": "1/12",
+  "form": "num",
+  "expr": "((5)/(6))-((3)/(4))",
+  "traps": [
    [
-    "50",
-    "קודם מעבירים את <span class=\"n\">3</span> עם סימן הפוך: <span class=\"m\" dir=\"ltr\">7 − 3 = 4</span>. רק אז כופלים ב-<span class=\"n\">5</span>."
+    "1",
+    "לא מחסרים מכנים. מרחיבים למכנה <span class=\"n\">12</span>, ומחסרים רק מונים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c3",
+  "a": "10",
+  "form": "num",
+  "expr": "((x)/(3))+((x)/(6))=5",
+  "traps": [
+   [
+    "30",
+    "זה הערך של <span class=\"m\" dir=\"ltr\">3<i>x</i></span>. נשאר לחלק ב-<span class=\"n\">3</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c4",
+  "a": "20",
+  "form": "num",
+  "expr": "((x)/(4))+((x)/(5))=9",
+  "traps": [
+   [
+    "9",
+    "המכנה לא נעלם לבד: כופלים את שני האגפים ב-<span class=\"n\">20</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c5",
+  "a": "12",
+  "form": "num",
+  "expr": "((x)/(4))-((x)/(6))=1",
+  "traps": [
+   [
+    "24",
+    "המכנה המשותף הוא <span class=\"n\">12</span>, ולא <span class=\"n\">24</span>. בדקו: <span class=\"m\" dir=\"ltr\">24/4 − 24/6 = 2</span>, ולא <span class=\"n\">1</span>."
    ]
   ],
   "nsteps": 5,
-  "nhints": 1,
+  "nhints": 2,
   "out": ""
  },
  {
   "kind": "try",
-  "id": "t-hf4",
-  "a": "7",
+  "id": "t-c6",
+  "a": "4",
   "form": "num",
-  "expr": "((x+1)/(2))=((x+5)/(3))",
+  "expr": "((x+2)/(2))+((x-1)/(3))=4",
+  "traps": [
+   [
+    "17/5",
+    "המונים בסוגריים: <span class=\"m\" dir=\"ltr\">3(<i>x</i> + 2) = 3<i>x</i> + 6</span>, ולא <span class=\"m\" dir=\"ltr\">3<i>x</i> + 2</span>."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c7",
+  "a": "1",
+  "form": "num",
+  "expr": "((x+5)/(3))-((x-1)/(2))=2",
+  "traps": [
+   [
+    "-5",
+    "המינוס שלפני השבר השני חל על כל המונה: <span class=\"m\" dir=\"ltr\">−3(<i>x</i> − 1) = −3<i>x</i> + 3</span>, ולא <span class=\"m\" dir=\"ltr\">−3<i>x</i> − 3</span>."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c8",
+  "a": "5",
+  "form": "num",
+  "expr": "((x+3)/(4))=((x-1)/(2))",
   "traps": [
    [
     "4",
-    "כל מונה נכנס לסוגריים, וכל איבר בו מוכפל: <span class=\"m\" dir=\"ltr\">3<i>x</i> + 3</span> ו-<span class=\"m\" dir=\"ltr\">2<i>x</i> + 10</span>."
-   ],
-   [
-    "9",
-    "ה-<span class=\"n\">3</span> כופל גם את <span class=\"n\">1</span>: <span class=\"m\" dir=\"ltr\">3(<i>x</i> + 1) = 3<i>x</i> + 3</span>."
+    "ה-<span class=\"n\">2</span> כופל את כל המונה: <span class=\"m\" dir=\"ltr\">2(<i>x</i> − 1) = 2<i>x</i> − 2</span>, ולא <span class=\"m\" dir=\"ltr\">2<i>x</i> − 1</span>."
    ]
   ],
   "nsteps": 6,
@@ -614,18 +643,14 @@
  },
  {
   "kind": "try",
-  "id": "t-hf5",
-  "a": "1",
+  "id": "t-c9",
+  "a": "3",
   "form": "num",
-  "expr": "((2x+1)/(3))-((x-1)/(2))=1",
+  "expr": "((x)/(3))+1=((x+5)/(4))",
   "traps": [
    [
-    "-4",
-    "הכפל ב-<span class=\"n\">6</span> חל על כל איבר, גם על <span class=\"n\">1</span> שבאגף הימני: <span class=\"m\" dir=\"ltr\">6·1 = 6</span>."
-   ],
-   [
-    "7",
-    "מינוס כפול מינוס: <span class=\"m\" dir=\"ltr\">−3·(−1) = +3</span>, ולא <span class=\"m\" dir=\"ltr\">−3</span>."
+    "15",
+    "גם <span class=\"n\">1</span> מורחב למכנה <span class=\"n\">12</span>: <span class=\"m\" dir=\"ltr\">1 = 12/12</span>. אסור לשכוח אותו."
    ]
   ],
   "nsteps": 6,
@@ -634,14 +659,46 @@
  },
  {
   "kind": "try",
-  "id": "h-f2-t",
+  "id": "t-c10",
+  "a": "11",
+  "form": "num",
+  "expr": "((4)/(x))-((1)/(3x))=((1)/(3))",
+  "traps": [
+   [
+    "13",
+    "מחסרים: <span class=\"m\" dir=\"ltr\">12 − 1 = 11</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-c11",
+  "a": "-5",
+  "form": "num",
+  "expr": "((3)/(x-1))=((2)/(x+1))",
+  "traps": [
+   [
+    "-1",
+    "פותחים את שני הסוגריים: <span class=\"m\" dir=\"ltr\">3<i>x</i> + 3 = 2<i>x</i> − 2</span>. ובכל מקרה, <span class=\"m\" dir=\"ltr\"><i>x</i> = −1</span> מחוץ לתחום ההגדרה."
+   ]
+  ],
+  "nsteps": 7,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "hc-7-t",
   "a": "4.75",
   "form": "num",
   "expr": "((1-x)/(3))-((2+4x)/(7))+1=x-8",
   "traps": [
    [
     "0.5",
-    "גם <span class=\"n\">1</span> וגם <span class=\"m\" dir=\"ltr\"><i>x</i> − 8</span> מוכפלים ב-<span class=\"n\">21</span>, ולא רק השברים."
+    "גם <span class=\"n\">1</span> וגם <span class=\"m\" dir=\"ltr\"><i>x</i> − 8</span> מורחבים למכנה <span class=\"n\">21</span>, ולא רק השברים."
    ],
    [
     "11.875",
@@ -653,42 +710,6 @@
   "out": ""
  },
  {
-  "kind": "try",
-  "id": "t-hd1",
-  "a": "4",
-  "form": "num",
-  "expr": "((12)/(x))=3",
-  "traps": [
-   [
-    "36",
-    "כופלים את שני האגפים ב-<span class=\"m\" dir=\"ltr\"><i>x</i></span>: <span class=\"m\" dir=\"ltr\">12 = 3<i>x</i></span>. לא כופלים את <span class=\"n\">12</span> ב-<span class=\"n\">3</span>."
-   ],
-   [
-    "1/4",
-    "מ-<span class=\"m\" dir=\"ltr\">12 = 3<i>x</i></span> מחלקים את <span class=\"n\">12</span> ב-<span class=\"n\">3</span>, ולא את <span class=\"n\">3</span> ב-<span class=\"n\">12</span>."
-   ]
-  ],
-  "nsteps": 4,
-  "nhints": 2,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-hd2",
-  "a": "2",
-  "form": "num",
-  "expr": "((x+2)/(x-1))=4",
-  "traps": [
-   [
-    "1",
-    "ה-<span class=\"n\">4</span> כופל את כל המכנה: <span class=\"m\" dir=\"ltr\">4(<i>x</i> − 1) = 4<i>x</i> − 4</span>. וחוץ מזה, <span class=\"m\" dir=\"ltr\"><i>x</i> = 1</span> מאפס את המכנה, ולכן הוא מחוץ לתחום ההגדרה."
-   ]
-  ],
-  "nsteps": 7,
-  "nhints": 2,
-  "out": ""
- },
- {
   "kind": "err",
   "id": "hx-m-w",
   "bad": 1,
@@ -696,19 +717,75 @@
  },
  {
   "kind": "try2",
-  "id": "t-hm5",
+  "id": "t-s1",
   "a": {
-   "x": "6",
+   "x": "4",
+   "y": "5"
+  },
+  "nsteps": 7,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-s2",
+  "a": {
+   "x": "5",
+   "y": "2"
+  },
+  "nsteps": 7,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-s3",
+  "a": {
+   "x": "-2",
    "y": "3"
+  },
+  "nsteps": 9,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-s4",
+  "a": {
+   "x": "1",
+   "y": "-1"
   },
   "nsteps": 6,
   "nhints": 2
  },
  {
   "kind": "try2",
-  "id": "t-hm6",
+  "id": "t-s5",
   "a": {
-   "x": "4",
+   "x": "5",
+   "y": "-1"
+  },
+  "nsteps": 9,
+  "nhints": 2
+ },
+ {
+  "kind": "err",
+  "id": "hx-m2-w",
+  "bad": 3,
+  "n": 6
+ },
+ {
+  "kind": "try2",
+  "id": "t-l1",
+  "a": {
+   "x": "3",
+   "y": "2"
+  },
+  "nsteps": 7,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-l2",
+  "a": {
+   "x": "3",
    "y": "2"
   },
   "nsteps": 8,
@@ -716,43 +793,23 @@
  },
  {
   "kind": "try2",
-  "id": "t-hm1",
-  "a": {
-   "x": "9",
-   "y": "3"
-  },
-  "nsteps": 3,
-  "nhints": 1
- },
- {
-  "kind": "try2",
-  "id": "t-hm2",
-  "a": {
-   "x": "-1",
-   "y": "-1"
-  },
-  "nsteps": 4,
-  "nhints": 1
- },
- {
-  "kind": "try2",
-  "id": "t-hm3",
+  "id": "t-l3",
   "a": {
    "x": "3",
-   "y": "3"
+   "y": "2"
   },
-  "nsteps": 6,
+  "nsteps": 10,
   "nhints": 2
  },
  {
   "kind": "try2",
-  "id": "t-hm4",
+  "id": "t-l4",
   "a": {
-   "x": "5",
-   "y": "-1"
+   "x": "2",
+   "y": "1"
   },
-  "nsteps": 6,
-  "nhints": 1
+  "nsteps": 9,
+  "nhints": 2
  },
  {
   "kind": "err",
@@ -835,87 +892,6 @@
   "nsteps": 4,
   "nhints": 2,
   "out": ""
- },
- {
-  "kind": "err",
-  "id": "hx-i-w",
-  "bad": 3,
-  "n": 4
- },
- {
-  "kind": "try",
-  "id": "t-hi2",
-  "a": "x≤5",
-  "form": "ineq",
-  "expr": "2x-3≤7",
-  "traps": [
-   [
-    "x≥5",
-    "מחלקים ב-<span class=\"n\">2</span>, מספר חיובי: הסימן לא מתהפך."
-   ],
-   [
-    "x≤2",
-    "כש-<span class=\"m\" dir=\"ltr\">−3</span> עובר לצד השני הוא הופך ל-<span class=\"m\" dir=\"ltr\">+3</span>: <span class=\"m\" dir=\"ltr\">7 + 3 = 10</span>."
-   ]
-  ],
-  "nsteps": 4,
-  "nhints": 1,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-hi3",
-  "a": "x<-2",
-  "form": "ineq",
-  "expr": "5-3x>11",
-  "traps": [
-   [
-    "x>-2",
-    "מחלקים ב-<span class=\"m\" dir=\"ltr\">−3</span>, מספר שלילי: הסימן מתהפך."
-   ]
-  ],
-  "nsteps": 4,
-  "nhints": 1,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-hi4",
-  "a": "x≤-5",
-  "form": "ineq",
-  "expr": "3(x-2)≥5x+4",
-  "traps": [
-   [
-    "x≥-5",
-    "מחלקים ב-<span class=\"m\" dir=\"ltr\">−2</span>, מספר שלילי: הסימן מתהפך."
-   ]
-  ],
-  "nsteps": 5,
-  "nhints": 2,
-  "out": ""
- },
- {
-  "kind": "try",
-  "id": "t-hi1",
-  "a": "x<2",
-  "form": "ineq",
-  "expr": "-x+2(x-1)-3x^2<(x+1)(2-3x)",
-  "traps": [],
-  "nsteps": 4,
-  "nhints": 2,
-  "out": ""
- },
- {
-  "kind": "sorter",
-  "id": "hw-sort-w",
-  "rows": [
-   " ≤ ",
-   " ≥ ",
-   " < ",
-   " > ",
-   " ≤ ",
-   " ≥ "
-  ]
  },
  {
   "kind": "try",
@@ -1022,25 +998,5 @@
   },
   "nsteps": 9,
   "nhints": 2
- },
- {
-  "kind": "try",
-  "id": "hw-3-t",
-  "a": "x≥130",
-  "form": "ineq",
-  "expr": "45x+300≥6150",
-  "traps": [
-   [
-    "x≤130",
-    "״לפחות״ פירושו גדול או שווה: <span class=\"m\" dir=\"ltr\"><i>x</i> ≥ 130</span>."
-   ],
-   [
-    "x≥6450/45",
-    "כש-<span class=\"n\">300</span> עובר לצד השני הוא מחליף סימן: <span class=\"m\" dir=\"ltr\">6150 − 300</span>."
-   ]
-  ],
-  "nsteps": 8,
-  "nhints": 2,
-  "out": ""
  }
 ]

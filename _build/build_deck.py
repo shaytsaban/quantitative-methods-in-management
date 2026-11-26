@@ -18,7 +18,7 @@ def render(s, total):
         n = s['part']
         note = f'<div class="pd-note">{TX(s["note"])}</div>' if s.get('note') else ''
         return (f'<section class="slide dark pd" id="{s["id"]}" data-title="{s["title"]}" style="--pc:#7fe3d6"><div class="pd-num">{n}</div><div class="pd-in">'
-                f'<div class="kick" style="color:#ffb199"><span>חלק <span class="n">{n}</span> מתוך <span class="n">{total}</span> · {TX("כ-" + str(s["mins"]) + " דקות")}</span></div><div class="pd-h">{s["h"]}</div><div class="pd-q">{TX(s["q"])}</div>{note}'
+                f'<div class="kick" style="color:#ffb199"><span>חלק <span class="n">{n}</span> מתוך <span class="n">{total}</span> · {TX(s["mins"] if isinstance(s["mins"], str) else "כ-" + str(s["mins"]) + " דקות")}</span></div><div class="pd-h">{s["h"]}</div><div class="pd-q">{TX(s["q"])}</div>{note}'
                 f'<div class="pd-cols"><div class="pd-box"><b>מה נעשה בחלק הזה</b><ul>{"".join("<li>" + TX(x) + "</li>" for x in s["learn"])}</ul></div></div></div></section>')
     goal = f'<span class="goal"><b>המטרה:</b> {TX(s["goal"])}</span>' if s.get('goal') else ''
     kick = f'<div class="kick"><span>{TX(s["kick"])}</span>{goal}</div>' if s.get('kick') else ''
@@ -50,19 +50,19 @@ fonts, base, tail = R('shell/fonts.css'), R('shell/base.css'), R('shell/tail.htm
 _used = set(re.findall(r'data-t="(\w+)"', slides_html))
 assert _used <= set(G), _used - set(G)
 gj = json.dumps({k: {f: (TX(v) if f != 'en' else v) for f, v in g.items()} for k, g in G.items()}, ensure_ascii=False)
-js = f'const COURSE={json.dumps(COURSE, ensure_ascii=False)};const LESSON={LESSON};\nconst G={gj};\n' + R('deck.js') + '\n' + R('act.js')
+js = f'const COURSE={json.dumps(COURSE, ensure_ascii=False)};const LESSON={LESSON};\nconst G={gj};\n' + R('deck.js') + '\n' + R('act.js') + (('\n' + R('act_l2.js')) if LESSON >= 2 else '')
 title = f'{COURSE} | מפגש {LESSON} | {LMETA["title"]}'
 html = (f'<!doctype html>\n<html lang="he" dir="rtl">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>{title}</title>\n<style>\n'
-        + fonts + base + R('deck.css') + '</style>\n</head>\n<body>\n<div class="stage" id="stage">\n' + slides_html + '\n' + tail
+        + fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '') + '</style>\n</head>\n<body>\n<div class="stage" id="stage">\n' + slides_html + '\n' + tail
         + '<script>\n(function(){\n' + js + '\n})();\n</script>\n</body>\n</html>\n')
 for bad in ('—', '־', '–', '…'):
     assert bad not in html.replace(fonts, ''), 'forbidden character ' + bad
 out = os.path.join(H, '..', 'lectures', f'lecture-{LESSON}')
 os.makedirs(out, exist_ok=True)
 open(os.path.join(out, 'presentation.html'), 'w', encoding='utf8').write(html)
-css = fonts + base + R('deck.css')
+css = fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '')
 used = set()
-for m in re.finditer(r'class="([^"]+)"', slides_html + tail + R('deck.js') + R('act.js')):
+for m in re.finditer(r'class="([^"]+)"', slides_html + tail + R('deck.js') + R('act.js') + R('act_l2.js')):
     for c in m.group(1).split():
         if re.fullmatch(r'[\w-]+', c): used.add(c)
 missing = sorted(c for c in used if not re.search(r'\.' + re.escape(c) + r'(?![\w-])', css))
