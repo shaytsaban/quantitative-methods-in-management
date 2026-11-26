@@ -1,0 +1,6 @@
+/* lesson 3 on: coordinate planes and the slope-sign chips. Kept out of deck.css so lessons 1 and 2 rebuild byte-identical. */
+.plane svg.diag{max-height:330px}
+.sgn3{display:flex;gap:10px;justify-content:center;margin-top:8px}
+.sgn3 .st{background:#fff;border-radius:12px;padding:6px 16px;font-size:20px;font-weight:800;box-shadow:0 2px 0 var(--line)}
+.sgn3 .sg1{color:#e0533a}.sgn3 .sg2{color:#087469}.sgn3 .sg3{color:#4f33c9}
+.plane{width:100%;box-sizing:border-box}

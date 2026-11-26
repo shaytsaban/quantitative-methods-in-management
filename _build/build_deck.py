@@ -53,14 +53,14 @@ gj = json.dumps({k: {f: (TX(v) if f != 'en' else v) for f, v in g.items()} for k
 js = f'const COURSE={json.dumps(COURSE, ensure_ascii=False)};const LESSON={LESSON};\nconst G={gj};\n' + R('deck.js') + '\n' + R('act.js') + (('\n' + R('act_l2.js')) if LESSON >= 2 else '')
 title = f'{COURSE} | מפגש {LESSON} | {LMETA["title"]}'
 html = (f'<!doctype html>\n<html lang="he" dir="rtl">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>{title}</title>\n<style>\n'
-        + fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '') + '</style>\n</head>\n<body>\n<div class="stage" id="stage">\n' + slides_html + '\n' + tail
+        + fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '') + (R('deck_l3.css') if LESSON >= 3 else '') + '</style>\n</head>\n<body>\n<div class="stage" id="stage">\n' + slides_html + '\n' + tail
         + '<script>\n(function(){\n' + js + '\n})();\n</script>\n</body>\n</html>\n')
 for bad in ('—', '־', '–', '…'):
     assert bad not in html.replace(fonts, ''), 'forbidden character ' + bad
 out = os.path.join(H, '..', 'lectures', f'lecture-{LESSON}')
 os.makedirs(out, exist_ok=True)
 open(os.path.join(out, 'presentation.html'), 'w', encoding='utf8').write(html)
-css = fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '')
+css = fonts + base + R('deck.css') + (R('deck_l2.css') if LESSON >= 2 else '') + (R('deck_l3.css') if LESSON >= 3 else '')
 used = set()
 for m in re.finditer(r'class="([^"]+)"', slides_html + tail + R('deck.js') + R('act.js') + R('act_l2.js')):
     for c in m.group(1).split():

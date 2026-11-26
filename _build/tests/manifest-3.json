@@ -1,0 +1,762 @@
+[
+ {
+  "kind": "try",
+  "id": "t-r1",
+  "a": "5",
+  "form": "num",
+  "expr": "5x-7=2x+8",
+  "traps": [
+   [
+    "1/3",
+    "כש-<span class=\"m\" dir=\"ltr\">−7</span> עובר לאגף הימני הוא הופך ל-<span class=\"m\" dir=\"ltr\">+7</span>: <span class=\"m\" dir=\"ltr\">8 + 7 = 15</span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-r2",
+  "a": "12",
+  "form": "num",
+  "expr": "((x)/(4))+((x)/(6))=5",
+  "traps": [
+   [
+    "50",
+    "לא מחברים מכנים. מרחיבים כל שבר למכנה המשותף, <span class=\"n\">12</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try2",
+  "id": "t-r3",
+  "a": {
+   "x": "3",
+   "y": "6"
+  },
+  "nsteps": 4,
+  "nhints": 1
+ },
+ {
+  "kind": "try2",
+  "id": "t-r4",
+  "a": {
+   "x": "4",
+   "y": "3"
+  },
+  "nsteps": 6,
+  "nhints": 1
+ },
+ {
+  "kind": "cells",
+  "id": "f-pc",
+  "ans": [
+   "150",
+   "300",
+   "1200",
+   "30"
+  ]
+ },
+ {
+  "kind": "cells",
+  "id": "f-fac",
+  "ans": [
+   "1.2",
+   "480",
+   "0.8",
+   "320",
+   "1.05",
+   "420",
+   "0.85",
+   "340",
+   "2",
+   "800",
+   "0.5",
+   "200"
+  ]
+ },
+ {
+  "kind": "mc",
+  "id": "pc-mc-q",
+  "right": "198 ש״ח",
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-p1",
+  "a": "25",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "20",
+    "חילקתם במחיר החדש. מחלקים במחיר הקודם, <span class=\"n\">800</span>."
+   ],
+   [
+    "0.25",
+    "זה השינוי כמספר עשרוני. כפלו ב-<span class=\"n\">100</span> כדי לקבל אחוזים."
+   ],
+   [
+    "200",
+    "זה השינוי בש״ח. השאלה שואלת באחוזים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-p2",
+  "a": "-50",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "50",
+    "המחיר ירד, ולכן השינוי שלילי: <span class=\"m\" dir=\"ltr\">−50</span>."
+   ],
+   [
+    "-100",
+    "המקדם הוא <span class=\"m\" dir=\"ltr\">20/40 = 0.5</span>, ולכן השינוי הוא <span class=\"m\" dir=\"ltr\">0.5 − 1 = −0.5</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "pc-btry-t",
+  "a": "500",
+  "form": "num",
+  "expr": "0.88x=440",
+  "traps": [
+   [
+    "440/0.9",
+    "לא מחברים אחוזים (<span class=\"m\" dir=\"ltr\">−20 + 10 = −10</span>). כופלים מקדמים: <span class=\"m\" dir=\"ltr\">0.8·1.1 = 0.88</span>."
+   ],
+   [
+    "484",
+    "לא מוסיפים <span class=\"n\">10%</span> ל-<span class=\"n\">440</span>. כותבים משוואה: <span class=\"m\" dir=\"ltr\">0.88<i>x</i> = 440</span>."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "cells",
+  "id": "f-val",
+  "ans": [
+   "-2",
+   "1",
+   "10",
+   "-8"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "t-f1",
+  "a": "5",
+  "form": "num",
+  "expr": "3x-2=13",
+  "traps": [
+   [
+    "11/3",
+    "כש-<span class=\"m\" dir=\"ltr\">−2</span> עובר אגף הוא הופך ל-<span class=\"m\" dir=\"ltr\">+2</span>: <span class=\"m\" dir=\"ltr\">3<i>x</i> = 15</span>."
+   ],
+   [
+    "37",
+    "זה <span class=\"m\" dir=\"ltr\"><i>f</i>(13)</span>. כאן הערך <span class=\"n\">13</span> ידוע, ומחפשים את <span class=\"m\" dir=\"ltr\"><i>x</i></span>: משוואה."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "sorter",
+  "id": "f-is-w",
+  "rows": [
+   "פונקציה",
+   "לא פונקציה",
+   "פונקציה",
+   "פונקציה",
+   "לא פונקציה"
+  ]
+ },
+ {
+  "kind": "try",
+  "id": "t-d1",
+  "a": "-4",
+  "form": "num",
+  "expr": "((5)/(x+4))",
+  "traps": [
+   [
+    "4",
+    "הציבו <span class=\"n\">4</span>: המכנה יוצא <span class=\"n\">8</span>, ולא <span class=\"n\">0</span>. משווים את המכנה לאפס: <span class=\"m\" dir=\"ltr\"><i>x</i> + 4 = 0</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-d2",
+  "a": "3",
+  "form": "num",
+  "expr": "((1)/(2x-6))",
+  "traps": [
+   [
+    "6",
+    "מ-<span class=\"m\" dir=\"ltr\">2<i>x</i> = 6</span> נשאר לחלק ב-<span class=\"n\">2</span>."
+   ],
+   [
+    "-3",
+    "כש-<span class=\"m\" dir=\"ltr\">−6</span> עובר אגף הוא הופך ל-<span class=\"m\" dir=\"ltr\">+6</span>: <span class=\"m\" dir=\"ltr\">2<i>x</i> = 6</span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "mc",
+  "id": "f-rmc-q",
+  "right": "y ≥ 3",
+  "n": 4
+ },
+ {
+  "kind": "cells",
+  "id": "f-mb",
+  "ans": [
+   "3",
+   "1",
+   "-2",
+   "5",
+   "1",
+   "-7",
+   "-3",
+   "6",
+   "0",
+   "6",
+   "0.5",
+   "0"
+  ]
+ },
+ {
+  "kind": "try2",
+  "id": "t-l1",
+  "a": {
+   "m": "2",
+   "b": "3"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-l2",
+  "a": {
+   "m": "-3",
+   "b": "11"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "sorter",
+  "id": "l-sort-w",
+  "rows": [
+   "מקבילים",
+   "מאונכים",
+   "אף אחד מהשניים",
+   "מאונכים",
+   "מקבילים"
+  ]
+ },
+ {
+  "kind": "try2",
+  "id": "t-l3",
+  "a": {
+   "m": "3",
+   "b": "1"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-l4",
+  "a": {
+   "m": "-1/2",
+   "b": "3"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-i1",
+  "a": {
+   "x": "2",
+   "y": "3"
+  },
+  "nsteps": 6,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-i2",
+  "a": {
+   "x": "2",
+   "y": "4"
+  },
+  "nsteps": 6,
+  "nhints": 2
+ },
+ {
+  "kind": "try",
+  "id": "x-1-t",
+  "a": "8736",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "8720",
+    "לא מחברים אחוזים: ההעלאה השנייה היא <span class=\"n\">4%</span> מ-<span class=\"n\">8,400</span>, ולא מ-<span class=\"n\">8,000</span>."
+   ],
+   [
+    "8400",
+    "זו המשכורת אחרי ההעלאה הראשונה בלבד."
+   ]
+  ],
+  "nsteps": 6,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try2",
+  "id": "t-x2",
+  "a": {
+   "x": "10",
+   "y": "1000"
+  },
+  "nsteps": 7,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-x3",
+  "a": {
+   "m": "1",
+   "b": "40"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "err",
+  "id": "hx-p-w",
+  "bad": 2,
+  "n": 4
+ },
+ {
+  "kind": "try",
+  "id": "t-hp3",
+  "a": "36",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "16",
+    "לא מחלקים את <span class=\"n\">240</span> ב-<span class=\"n\">15</span>. <span class=\"n\">15%</span> הם <span class=\"m\" dir=\"ltr\">0.15</span>, וכופלים: <span class=\"m\" dir=\"ltr\">0.15·240</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp4",
+  "a": "220",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "30",
+    "זה גובה ההנחה. המחיר החדש הוא <span class=\"m\" dir=\"ltr\">250 − 30</span>."
+   ],
+   [
+    "238",
+    "הירידה היא <span class=\"n\">12%</span> מ-<span class=\"n\">250</span>, כלומר <span class=\"n\">30</span> ש״ח, ולא <span class=\"n\">12</span> ש״ח."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp5",
+  "a": "28",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "21.875",
+    "חילקתם במחיר החדש. מחלקים במחיר הקודם, <span class=\"n\">2,500</span>."
+   ],
+   [
+    "0.28",
+    "זה השיעור כמספר עשרוני. כפלו ב-<span class=\"n\">100</span> כדי לקבל אחוזים."
+   ],
+   [
+    "700",
+    "זה השינוי בש״ח. השאלה שואלת באחוזים."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp6",
+  "a": "5000",
+  "form": "num",
+  "expr": "x",
+  "traps": [
+   [
+    "4838",
+    "לא מורידים <span class=\"n\">18%</span> מ-<span class=\"n\">5,900</span>: ה-<span class=\"n\">18%</span> נלקחו מהמחיר שלפני המע״מ. כותבים משוואה: <span class=\"m\" dir=\"ltr\">1.18<i>x</i> = 5900</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 2,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp7",
+  "a": "405",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "400",
+    "לא מחברים אחוזים: הירידה השנייה היא <span class=\"n\">10%</span> מ-<span class=\"n\">450</span>, כלומר <span class=\"n\">45</span>, ולא <span class=\"n\">50</span>."
+   ]
+  ],
+  "nsteps": 5,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp8",
+  "a": "10",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "600",
+    "זה השינוי בש״ח. השאלה שואלת באחוזים."
+   ],
+   [
+    "0.1",
+    "כפלו ב-<span class=\"n\">100</span> כדי לקבל אחוזים."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp9",
+  "a": "480",
+  "form": "num",
+  "expr": "0.75x=360",
+  "traps": [
+   [
+    "450",
+    "לא מוסיפים <span class=\"n\">25%</span> ל-<span class=\"n\">360</span>: ה-<span class=\"n\">25%</span> נלקחו מהמחיר המקורי. כותבים משוואה: <span class=\"m\" dir=\"ltr\">0.75<i>x</i> = 360</span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hp10",
+  "a": "0",
+  "form": "num",
+  "expr": "",
+  "traps": [
+   [
+    "5",
+    "לא מחברים אחוזים: <span class=\"m\" dir=\"ltr\">1.25·0.8 = 1</span>, ולכן השינוי הוא <span class=\"n\">0%</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-f-w",
+  "bad": 1,
+  "n": 3
+ },
+ {
+  "kind": "try",
+  "id": "t-hf1",
+  "a": "17",
+  "form": "num",
+  "expr": "f(-3)",
+  "traps": [
+   [
+    "-19",
+    "<span class=\"m\" dir=\"ltr\">(−3)<sup>2</sup> = 9</span>, ולא <span class=\"m\" dir=\"ltr\">−9</span>: מינוס כפול מינוס."
+   ],
+   [
+    "35",
+    "קודם חזקה ורק אחר כך כפל: <span class=\"m\" dir=\"ltr\">2·9 = 18</span>, ולא <span class=\"m\" dir=\"ltr\">(2·(−3))<sup>2</sup></span>."
+   ]
+  ],
+  "nsteps": 3,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hf2",
+  "a": "-3",
+  "form": "num",
+  "expr": "5-2x=11",
+  "traps": [
+   [
+    "3",
+    "בדקו את הסימן: <span class=\"m\" dir=\"ltr\">5 − 11 = −6</span>, ולכן <span class=\"m\" dir=\"ltr\"><i>x</i> = −3</span>."
+   ],
+   [
+    "-17",
+    "זה <span class=\"m\" dir=\"ltr\"><i>g</i>(11)</span>. כאן הערך <span class=\"n\">11</span> ידוע, ומחפשים את <span class=\"m\" dir=\"ltr\"><i>x</i></span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hf3",
+  "a": "4",
+  "form": "num",
+  "expr": "((x+1)/(x-4))",
+  "traps": [
+   [
+    "-1",
+    "זה המספר שמאפס את המונה. אסור לאפס את המכנה: <span class=\"m\" dir=\"ltr\"><i>x</i> − 4 = 0</span>."
+   ],
+   [
+    "-4",
+    "כש-<span class=\"m\" dir=\"ltr\">−4</span> עובר אגף הוא הופך ל-<span class=\"m\" dir=\"ltr\">+4</span>."
+   ]
+  ],
+  "nsteps": 2,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try",
+  "id": "t-hf4",
+  "a": "9",
+  "form": "num",
+  "expr": "4x+10=46",
+  "traps": [
+   [
+    "11.5",
+    "קודם מורידים את <span class=\"n\">10</span> השקלים הקבועים, ורק אז מחלקים ב-<span class=\"n\">4</span>."
+   ],
+   [
+    "194",
+    "זה <span class=\"m\" dir=\"ltr\"><i>f</i>(46)</span>. כאן המחיר ידוע, ומחפשים את המרחק."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "err",
+  "id": "hx-l-w",
+  "bad": 1,
+  "n": 5
+ },
+ {
+  "kind": "try2",
+  "id": "t-hl1",
+  "a": {
+   "m": "3",
+   "b": "-5"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hl2",
+  "a": {
+   "m": "-3",
+   "b": "3"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hl3",
+  "a": {
+   "m": "0.5",
+   "b": "0"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hl4",
+  "a": {
+   "m": "20",
+   "b": "500"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try",
+  "id": "t-ha1",
+  "a": "4",
+  "form": "num",
+  "expr": "x",
+  "traps": [
+   [
+    "-12",
+    "זה החיתוך עם ציר <span class=\"m\" dir=\"ltr\"><i>y</i></span>, כש-<span class=\"m\" dir=\"ltr\"><i>x</i> = 0</span>. על ציר <span class=\"m\" dir=\"ltr\"><i>x</i></span>: <span class=\"m\" dir=\"ltr\"><i>y</i> = 0</span>."
+   ],
+   [
+    "-4",
+    "כש-<span class=\"m\" dir=\"ltr\">−12</span> עובר אגף הוא הופך ל-<span class=\"m\" dir=\"ltr\">+12</span>: <span class=\"m\" dir=\"ltr\">12 = 3<i>x</i></span>."
+   ]
+  ],
+  "nsteps": 4,
+  "nhints": 1,
+  "out": ""
+ },
+ {
+  "kind": "try2",
+  "id": "t-ha2",
+  "a": {
+   "x": "4",
+   "y": "8"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-pp1",
+  "a": {
+   "m": "-2",
+   "b": "5"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-pp2",
+  "a": {
+   "m": "1/3",
+   "b": "3"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-pp3",
+  "a": {
+   "m": "-2",
+   "b": "7"
+  },
+  "nsteps": 5,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-pp4",
+  "a": {
+   "m": "2",
+   "b": "6"
+  },
+  "nsteps": 4,
+  "nhints": 2
+ },
+ {
+  "kind": "err",
+  "id": "hx-i-w",
+  "bad": 1,
+  "n": 5
+ },
+ {
+  "kind": "try2",
+  "id": "t-hi1",
+  "a": {
+   "x": "2",
+   "y": "5"
+  },
+  "nsteps": 6,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hi2",
+  "a": {
+   "x": "4",
+   "y": "3"
+  },
+  "nsteps": 6,
+  "nhints": 2
+ },
+ {
+  "kind": "try2",
+  "id": "t-hi3",
+  "a": {
+   "x": "2",
+   "y": "4"
+  },
+  "nsteps": 5,
+  "nhints": 1
+ },
+ {
+  "kind": "try2",
+  "id": "t-hw1",
+  "a": {
+   "x": "5",
+   "y": "200"
+  },
+  "nsteps": 7,
+  "nhints": 2
+ }
+]

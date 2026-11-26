@@ -46,3 +46,4 @@
 .wk.c2{display:grid;grid-auto-flow:column;grid-template-columns:1fr 1fr;gap:4px 10px}
 .wk.c2 .wkr{padding:3px 12px 3px}.wk.c2 .wkr .eq{font-size:22px;margin:0}.wk.c2 .wkr .wn{font-size:17px}
 .wk.c2 .lab2 span{font-size:16.5px;padding:1px 7px}
+.route.r4{grid-template-columns:repeat(4,1fr)}
